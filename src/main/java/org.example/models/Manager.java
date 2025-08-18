@@ -1,0 +1,15 @@
+package org.example.models;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class Manager extends AbstractWorker {
+    private String department;
+
+    public Manager(String post, Integer id, String name, Integer salary, String department) {
+        super(post, id, name, salary);
+        this.department = department;
+    }
+}
