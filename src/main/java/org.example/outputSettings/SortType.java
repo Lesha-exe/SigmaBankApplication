@@ -10,9 +10,10 @@ public enum SortType {
     SALARY("SALARY"),
     UNDEFINED("");
     private final String name;
-    public static SortType from(String name){
-        for(SortType type: values()){
-            if(type.getName().equals(name)){
+
+    public static SortType from(String name) {
+        for (SortType type : values()) {
+            if (type.getName().equals(name)) {
                 return type;
             }
         }

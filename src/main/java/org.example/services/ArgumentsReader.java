@@ -1,9 +1,9 @@
 package org.example.services;
 
-import org.example.exceptionHandler.MissingFilePathException;
-import org.example.exceptionHandler.MissingOutputTypeParameterException;
-import org.example.exceptionHandler.MissingSortTypeException;
-import org.example.exceptionHandler.MissingStatOperatorException;
+import org.example.exceptions.MissingFilePathException;
+import org.example.exceptions.MissingOutputTypeParameterException;
+import org.example.exceptions.MissingSortTypeException;
+import org.example.exceptions.MissingStatOperatorException;
 import org.example.models.AppArguments;
 import org.example.models.StatisticsConfig;
 import org.example.outputSettings.OrderType;

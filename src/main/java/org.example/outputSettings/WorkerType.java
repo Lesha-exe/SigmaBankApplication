@@ -9,12 +9,13 @@ public enum WorkerType {
     MANAGER("Manager"),
     EMPLOYEE("Employee");
     private final String name;
-    public static WorkerType from(String name){
-        for(WorkerType type: values()){
-            if(type.getName().equals(name)){
+
+    public static WorkerType from(String name) {
+        for (WorkerType type : values()) {
+            if (type.getName().equals(name)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("ERROR! Incorrect sort type parameter: " + name);
+        throw new IllegalArgumentException("ERROR! Incorrect worker type parameter: " + name);
     }
 }

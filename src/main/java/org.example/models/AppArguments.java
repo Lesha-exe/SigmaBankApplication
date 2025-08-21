@@ -1,17 +1,13 @@
 package org.example.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.outputSettings.OrderType;
 import org.example.outputSettings.SortType;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
+@Data
+@Builder
 public class AppArguments {
-    private SortType SortType;
+    private SortType sortType;]
     private OrderType order;
     private StatisticsConfig statisticsConfig;
 }

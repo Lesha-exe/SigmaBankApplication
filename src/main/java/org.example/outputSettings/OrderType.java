@@ -9,9 +9,10 @@ public enum OrderType {
     ASC("ASC"),
     DESC("DESC");
     private final String name;
-    public static OrderType from(String name){
-        for(OrderType type: values()){
-            if(type.getName().equals(name)){
+
+    public static OrderType from(String name) {
+        for (OrderType type : values()) {
+            if (type.getName().equals(name)) {
                 return type;
             }
         }

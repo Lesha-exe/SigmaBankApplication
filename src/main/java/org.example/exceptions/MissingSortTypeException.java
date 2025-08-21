@@ -1,7 +1,7 @@
-package org.example.exceptionHandler;
+package org.example.exceptions;
 
 public class MissingSortTypeException extends RuntimeException {
-    public MissingSortTypeException(String message){
+    public MissingSortTypeException(String message) {
         super(message);
     }
 }
