@@ -10,7 +10,6 @@ import org.example.outputSettings.SortType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 public class AppArguments {
     private SortType SortType;
     private OrderType order;

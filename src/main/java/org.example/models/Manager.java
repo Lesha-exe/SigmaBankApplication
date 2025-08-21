@@ -8,8 +8,8 @@ import lombok.Setter;
 public class Manager extends AbstractWorker {
     private String department;
 
-    public Manager(String post, Integer id, String name, Integer salary, String department) {
-        super(post, id, name, salary);
+    public Manager(Integer id, String name, Integer salary, String department) {
+        super(id, name, salary);
         this.department = department;
     }
 }
