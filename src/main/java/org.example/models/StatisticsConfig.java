@@ -4,10 +4,13 @@ import lombok.*;
 import org.example.outputSettings.OutputType;
 
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Getter
 @Builder
 public class StatisticsConfig {
-    private Boolean statFlag;
-    private OutputType outputType;
-    private String outputFilePath;
+    private final Boolean statFlag;
+    private final OutputType outputType;
+    private final String outputFilePath;
 }

@@ -1,9 +1,13 @@
 package org.example.models;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
+@Builder
 public class Employee extends AbstractWorker {
     private Integer managerId;
 

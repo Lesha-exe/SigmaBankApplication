@@ -1,5 +1,6 @@
 package org.example.services;
 
+import lombok.Builder;
 import org.example.exceptions.MissingFilePathException;
 import org.example.exceptions.MissingOutputTypeParameterException;
 import org.example.exceptions.MissingSortTypeException;
@@ -13,21 +14,28 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ArgumentsReader {
+    private static final String SORT_ARGUMENT_PREFIX = "--sort=";
+    private static final String SORT_ARGUMENT_SHORT_PREFIX = "-s=";
+    private static final String ORDER_ARGUMENT_PREFIX = "--order=";
+    private static final String STATISTICS_FLAG = "--stat";
+    private static final String OUTPUT_ARGUMENT_PREFIX = "--output=";
+    private static final String OUTPUT_ARGUMENT_SHORT_PREFIX = "-o=";
+    private static final String PATH_ARGUMENT_PREFIX = "--path=";
     public AppArguments readArguments(String[] args) {
-        AppArguments appArgument = new AppArguments();
-        StatisticsConfig statisticsConfig = new StatisticsConfig();
+        AppArguments.AppArgumentsBuilder appArgumentsBuilder = AppArguments.builder();
+        StatisticsConfig.StatisticsConfigBuilder statisticsConfigBuilder = StatisticsConfig.builder();
         if (args.length > 0) {
             for (String arg : args) {
-                if (arg.startsWith("--sort=") || arg.startsWith("-s=")) {
-                    appArgument.setSortType(SortType.from(returnParameter(arg)));
-                } else if (arg.startsWith("--order=")) {
-                    appArgument.setOrder(OrderType.from(returnParameter(arg)));
-                } else if (arg.equals("--stat")) {
-                    statisticsConfig.setStatFlag(true);
-                } else if (arg.startsWith("--output=") || arg.startsWith("-o=")) {
-                    statisticsConfig.setOutputType(OutputType.from(returnParameter(arg)));
-                } else if (arg.startsWith("--path=")) {
-                    statisticsConfig.setOutputFilePath(returnParameter(arg));
+                if (arg.startsWith(SORT_ARGUMENT_PREFIX) || arg.startsWith(SORT_ARGUMENT_SHORT_PREFIX)) {
+                    appArgumentsBuilder.sortType(SortType.from(returnParameter(arg)));
+                } else if (arg.startsWith(ORDER_ARGUMENT_PREFIX)) {
+                    appArgumentsBuilder.order(OrderType.from(returnParameter(arg)));
+                } else if (arg.equals(STATISTICS_FLAG)) {
+                    statisticsConfigBuilder.statFlag(true);
+                } else if (arg.startsWith(OUTPUT_ARGUMENT_PREFIX) || arg.startsWith(OUTPUT_ARGUMENT_SHORT_PREFIX)) {
+                    statisticsConfigBuilder.outputType(OutputType.from(returnParameter(arg)));
+                } else if (arg.startsWith(PATH_ARGUMENT_PREFIX)) {
+                    statisticsConfigBuilder.outputFilePath(returnParameter(arg));
                 } else {
                     throw new IllegalArgumentException("ERROR! Unknown argument: " + arg);
                 }
@@ -35,7 +43,8 @@ public class ArgumentsReader {
         } else {
             System.out.println("ERROR! No command line...");
         }
-        appArgument.setStatisticsConfig(statisticsConfig);
+        appArgumentsBuilder.statisticsConfig(statisticsConfigBuilder.build());
+        AppArguments appArgument = appArgumentsBuilder.build();
         validateArguments(appArgument);
         return appArgument;
     }

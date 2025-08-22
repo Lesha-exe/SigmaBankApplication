@@ -4,10 +4,15 @@ import lombok.*;
 import org.example.outputSettings.OrderType;
 import org.example.outputSettings.SortType;
 
-@Data
+
+
+@RequiredArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Getter
 @Builder
 public class AppArguments {
-    private SortType sortType;]
-    private OrderType order;
-    private StatisticsConfig statisticsConfig;
+    private final SortType sortType;
+    private final OrderType order;
+    private final StatisticsConfig statisticsConfig;
 }
