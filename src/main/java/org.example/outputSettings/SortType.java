@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SortType {
     NAME("NAME"),
-    SALARY("SALARY"),
-    UNDEFINED("");
+    SALARY("SALARY");
     private final String name;
 
     public static SortType from(String name) {

@@ -19,9 +19,6 @@ public class WorkerDataParser {
         if (workerParser == null) {
             return new WorkerWithIncorrectData(workerData);
         }
-
         return workerParser.parse(workerData);
     }
-
-
 }

@@ -1,17 +1,15 @@
 package org.example.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 @Getter
-@Builder
+@SuperBuilder
 public abstract class AbstractWorker implements Worker {
-    private Integer id;
-    private String name;
-    private Integer salary;
+    private final Integer id;
+    private final String name;
+    private final Integer salary;
 
 }

@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum OutputType {
     FILE("FILE"),
-    CONSOLE("CONSOLE"),
-    UNDEFINED("");
+    CONSOLE("CONSOLE");
     private final String name;
 
     public static OutputType from(String name) {

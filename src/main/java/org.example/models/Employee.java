@@ -1,18 +1,17 @@
 package org.example.models;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Getter
-@Builder
+@SuperBuilder
 public class Employee extends AbstractWorker {
-    private Integer managerId;
+    private final Integer managerId;
 
-    public Employee(Integer id, String name, Integer salary, Integer managerId) {
-        super(id, name, salary);
-        this.managerId = managerId;
-    }
+//    public Employee(Integer id, String name, Integer salary, Integer managerId) {
+//        super(id, name, salary);
+//        this.managerId = managerId;
+//    }
 }
