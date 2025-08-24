@@ -19,23 +19,28 @@ public class DepartmentServices {
                 filter(worker -> worker instanceof Employee).
                 map(worker -> (Employee) worker).
                 toList();
-        sortEmployees(employees, appArguments.getSortType(), appArguments.getOrder());
         Map<Integer, Manager> managerMap = managers.stream().
                 collect(Collectors.toMap(Manager::getId, manager -> manager));
         Map<Integer, List<Employee>> employeeMap = employees.stream().
                 collect(Collectors.groupingBy(Employee::getManagerId));
-
-        List<Department> departments =
-        return null;
+        Map<Integer, List<Employee>> employeeSortedMap =
+                sortEmployees(employeeMap, appArguments.getSortType(), appArguments.getOrder());
+        List<Department> departments = managerMap.values().stream().
+                map(manager -> new Department(manager, employeeSortedMap.getOrDefault(manager.getId(), List.of()))).
+                toList();
+        return departments;
     }
 
     public void saveDepartments(List<Department> departments){
     }
 
-    private List<Employee> sortEmployees(List<Employee> employees,
+    private Map<Integer, List<Employee>> sortEmployees(Map<Integer, List<Employee>> employeeMap,
                                                        SortType sortType, OrderType orderType){
-        if(sortType.equals(SortType.SALARY)){
-            return employees.stream().sorted(Comparator.comparing(Employee::getSalary)).toList();
+        if(sortType.equals(SortType.SALARY) && orderType.equals(OrderType.ASC)){
+            return employeeMap.getOrDefault()
+            return employeeMap.stream().sorted(Comparator.comparing(Employee::getSalary)).toList();
+        } else if (sortType.equals(SortType.SALARY) && orderType.equals(OrderType.DESC)) {
+            return employeeMap.stream().sorted(Comparator.comparing(Employee::getSalary).reversed()).toList();
         }
         return employees;
     }
