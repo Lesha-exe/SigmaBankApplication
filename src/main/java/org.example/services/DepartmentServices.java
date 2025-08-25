@@ -4,45 +4,93 @@ import org.example.models.*;
 import org.example.outputSettings.OrderType;
 import org.example.outputSettings.SortType;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DepartmentServices {
-    public List<Department> createDepartment (List<Worker> workers, AppArguments appArguments){
-        List<Manager> managers = workers.stream().
-                filter(worker -> worker instanceof Manager).
-                map(worker -> (Manager) worker).
-                toList();
-        List<Employee> employees = workers.stream().
-                filter(worker -> worker instanceof Employee).
-                map(worker -> (Employee) worker).
-                toList();
-        Map<Integer, Manager> managerMap = managers.stream().
-                collect(Collectors.toMap(Manager::getId, manager -> manager));
-        Map<Integer, List<Employee>> employeeMap = employees.stream().
-                collect(Collectors.groupingBy(Employee::getManagerId));
-        Map<Integer, List<Employee>> employeeSortedMap =
-                sortEmployees(employeeMap, appArguments.getSortType(), appArguments.getOrder());
-        List<Department> departments = managerMap.values().stream().
-                map(manager -> new Department(manager, employeeSortedMap.getOrDefault(manager.getId(), List.of()))).
-                toList();
-        return departments;
+    private static final Comparator<Employee> SALARY_COMPARATOR_ASC = Comparator.comparing(Employee::getSalary);
+    private static final Comparator<Employee> SALARY_COMPARATOR_DESC = SALARY_COMPARATOR_ASC.reversed();
+    private static final Comparator<Employee> NAME_COMPARATOR_ASC = Comparator.comparing(Employee::getName);
+    private static final Comparator<Employee> NAME_COMPARATOR_DESC = NAME_COMPARATOR_ASC.reversed();
+
+    public List<Department> createDepartments(List<Worker> workers, AppArguments appArguments) {
+        final List<Manager> managers = workersOfType(workers, Manager.class);
+        final List<Employee> employees = workersOfType(workers, Employee.class);
+
+        Map<Integer, List<Employee>> employeeMap = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getManagerId));
+        return managers.stream()
+                .map(manager -> createDepartment(appArguments, manager, employeeMap))
+                .toList();
     }
 
-    public void saveDepartments(List<Department> departments){
+    private static <T extends Worker> List<T> workersOfType(List<Worker> workers, Class<T> type) {
+        return workers.stream()
+                .filter(worker -> type.isInstance(worker))
+                .map(worker -> type.cast(worker))
+                .toList();
     }
 
-    private Map<Integer, List<Employee>> sortEmployees(Map<Integer, List<Employee>> employeeMap,
-                                                       SortType sortType, OrderType orderType){
-        if(sortType.equals(SortType.SALARY) && orderType.equals(OrderType.ASC)){
-            return employeeMap.getOrDefault()
-            return employeeMap.stream().sorted(Comparator.comparing(Employee::getSalary)).toList();
-        } else if (sortType.equals(SortType.SALARY) && orderType.equals(OrderType.DESC)) {
-            return employeeMap.stream().sorted(Comparator.comparing(Employee::getSalary).reversed()).toList();
+    private Department createDepartment(AppArguments appArguments, Manager manager, Map<Integer, List<Employee>> employeeMap) {
+        final List<Employee> departmentEmployees = employeeMap.get(manager.getId());
+        sortEmployees(departmentEmployees, appArguments.getSortType(), appArguments.getOrder());
+        return new Department(manager, departmentEmployees);
+    }
+
+    private void sortEmployees(List<Employee> departmentEmployees, SortType sortType, OrderType orderType) {
+        if (sortType == null) {
+            return;
         }
-        return employees;
+        departmentEmployees.sort(getEmployeesComparator(sortType, orderType));
     }
 
+    private Comparator<Employee> getEmployeesComparator(SortType sortType, OrderType orderType) {
+        if (sortType == SortType.SALARY) {
+            return orderType == OrderType.ASC ? SALARY_COMPARATOR_ASC : SALARY_COMPARATOR_DESC;
+        } else {
+            return orderType == OrderType.ASC ? NAME_COMPARATOR_ASC : NAME_COMPARATOR_DESC;
+        }
+    }
+
+    public void saveDepartments(List<Department> departments) {
+        Map<String, Department> departmentMap = departments.stream().
+                collect(Collectors.toMap(
+                        department -> department.getManager().getDepartment(),
+                        department -> department
+                ));
+        departmentMap.forEach((departmentName, department)-> {
+            Path path = Path.of("output", departmentName + ".sb");
+            try {
+                Files.createDirectories(path.getParent());
+                try (BufferedWriter writer = Files.newBufferedWriter(path)){
+                    Manager manager = department.getManager();
+                    writer.write(String.format(
+                            "Manager, %d, %s, %d",
+                            manager.getId(),
+                            manager.getName(),
+                            manager.getSalary()
+                    ));
+                    writer.newLine();
+                    for(Employee employee: department.getEmployeeList()){
+                        writer.write(String.format(
+                                "Employee, %d, %s, %d, %d",
+                                employee.getId(),
+                                employee.getName(),
+                                employee.getSalary(),
+                                employee.getManagerId()
+                        ));
+                        writer.newLine();
+                    }
+                }
+            } catch (Exception exception){
+                throw new RuntimeException("Error while saving department " + exception.getMessage());
+            }
+        });
+    }
 }
