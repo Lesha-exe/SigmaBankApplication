@@ -1,8 +1,6 @@
 package org.example.services;
 
-import lombok.Builder;
 import org.example.models.Employee;
-import org.example.models.Manager;
 import org.example.models.Worker;
 import org.example.models.WorkerWithIncorrectData;
 
@@ -30,7 +28,7 @@ public class EmployeeParser implements WorkerParser {
             return false;
         } else if (employee.getSalary() < 0 || employee.getSalary().equals(null)) {
             return false;
-        }else if (employee.getManagerId() < 0 || employee.getManagerId().equals(null)) {
+        } else if (employee.getManagerId() < 0 || employee.getManagerId().equals(null)) {
             return false;
         } else if (employee.getName().equals(null)) {
             return false;

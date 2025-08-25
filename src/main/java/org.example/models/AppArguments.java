@@ -4,8 +4,6 @@ import lombok.*;
 import org.example.outputSettings.OrderType;
 import org.example.outputSettings.SortType;
 
-
-
 @RequiredArgsConstructor
 @EqualsAndHashCode
 @ToString

@@ -28,7 +28,7 @@ public class ManagerParser implements WorkerParser {
             return false;
         } else if (manager.getSalary() < 0 || manager.getSalary().equals(null)) {
             return false;
-        }  else if (manager.getName().equals(null)) {
+        } else if (manager.getName().equals(null)) {
             return false;
         } else if (manager.getDepartment().equals(null)) {
             return false;

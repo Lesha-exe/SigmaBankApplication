@@ -3,7 +3,6 @@ package org.example.models;
 import lombok.*;
 import org.example.outputSettings.OutputType;
 
-
 @RequiredArgsConstructor
 @EqualsAndHashCode
 @ToString

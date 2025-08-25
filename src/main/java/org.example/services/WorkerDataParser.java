@@ -1,12 +1,11 @@
 package org.example.services;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.example.models.Worker;
 import org.example.models.WorkerWithIncorrectData;
 import org.example.outputSettings.WorkerType;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 @AllArgsConstructor

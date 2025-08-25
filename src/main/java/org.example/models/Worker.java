@@ -1,4 +1,3 @@
 package org.example.models;
 
-public interface Worker {
-}
+public interface Worker {}

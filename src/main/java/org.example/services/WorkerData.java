@@ -1,10 +1,9 @@
 package org.example.services;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.example.models.Worker;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Getter

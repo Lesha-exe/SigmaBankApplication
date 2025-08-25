@@ -20,16 +20,19 @@ public class ArgumentsReader {
 
     public AppArguments readArguments(String[] args) {
         AppArguments.AppArgumentsBuilder appArgumentsBuilder = AppArguments.builder();
-        StatisticsConfig.StatisticsConfigBuilder statisticsConfigBuilder = StatisticsConfig.builder();
+        StatisticsConfig.StatisticsConfigBuilder statisticsConfigBuilder =
+                StatisticsConfig.builder();
         if (args.length > 0) {
             for (String arg : args) {
-                if (arg.startsWith(SORT_ARGUMENT_PREFIX) || arg.startsWith(SORT_ARGUMENT_SHORT_PREFIX)) {
+                if (arg.startsWith(SORT_ARGUMENT_PREFIX)
+                        || arg.startsWith(SORT_ARGUMENT_SHORT_PREFIX)) {
                     appArgumentsBuilder.sortType(SortType.from(getParameterValue(arg)));
                 } else if (arg.startsWith(ORDER_ARGUMENT_PREFIX)) {
                     appArgumentsBuilder.order(OrderType.from(getParameterValue(arg)));
                 } else if (arg.equals(STATISTICS_FLAG)) {
                     statisticsConfigBuilder.statFlag(true);
-                } else if (arg.startsWith(OUTPUT_ARGUMENT_PREFIX) || arg.startsWith(OUTPUT_ARGUMENT_SHORT_PREFIX)) {
+                } else if (arg.startsWith(OUTPUT_ARGUMENT_PREFIX)
+                        || arg.startsWith(OUTPUT_ARGUMENT_SHORT_PREFIX)) {
                     statisticsConfigBuilder.outputType(OutputType.from(getParameterValue(arg)));
                 } else if (arg.startsWith(PATH_ARGUMENT_PREFIX)) {
                     statisticsConfigBuilder.outputFilePath(getParameterValue(arg));
@@ -53,8 +56,8 @@ public class ArgumentsReader {
         OutputType outputType = appArguments.getStatisticsConfig().getOutputType();
         String outputFilePath = appArguments.getStatisticsConfig().getOutputFilePath();
         if ((sortType == null) && (orderType != null)) {
-            throw new MissingSortTypeException("ERROR! You entered order type," +
-                    " but sort type parameter is missing...");
+            throw new MissingSortTypeException(
+                    "ERROR! You entered order type," + " but sort type parameter is missing...");
         }
         if (!statFlag && outputType != null) {
             throw new MissingStatOperatorException("ERROR! Missing --stat operator ");
@@ -63,7 +66,8 @@ public class ArgumentsReader {
             throw new MissingFilePathException("ERROR! Missing output file path...");
         }
         if (outputFilePath != null && outputType == null) {
-            throw new MissingOutputTypeParameterException("ERROR! Missing output type parameter...");
+            throw new MissingOutputTypeParameterException(
+                    "ERROR! Missing output type parameter...");
         }
     }
 
