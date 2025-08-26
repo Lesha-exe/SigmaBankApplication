@@ -1,7 +1,9 @@
 package org.example;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.models.AppArguments;
+import org.example.models.Department;
 import org.example.services.ArgumentsReader;
 import org.example.services.DepartmentService;
 import org.example.services.WorkerData;
@@ -19,9 +21,9 @@ public class WorkerDataApplication {
         try {
             AppArguments appArguments = argumentsReader.readArguments(args);
             WorkerData workerData = workerDataReader.readWorkers();
-            //            List<Department> departments = departmentServices.
-            //                    createDepartment(workerData.getWorkersWithCorrectData(),
-            // appArguments);
+            List<Department> departments =
+                    departmentServices.createDepartments(
+                            workerData.getWorkersWithCorrectData(), appArguments);
 
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
