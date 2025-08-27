@@ -1,0 +1,16 @@
+package ru.korona.task.services;
+
+import java.util.Map;
+import ru.korona.task.outputSettings.WorkerType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class Config {
+    @Bean
+    public WorkerDataParser workerDataParser(
+            ManagerParser managerParser, EmployeeParser employeeParser) {
+        return new WorkerDataParser(
+                Map.of(WorkerType.MANAGER, managerParser, WorkerType.EMPLOYEE, employeeParser));
+    }
+}

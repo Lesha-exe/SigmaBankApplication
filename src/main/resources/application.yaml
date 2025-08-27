@@ -1,2 +1,4 @@
+dataReader:
+  inputDir: input
 departments:
-  output dir: output
+  outputDir: output
