@@ -1,8 +1,8 @@
 package ru.korona.task.models;
 
 import lombok.*;
-import ru.korona.task.outputSettings.OrderType;
-import ru.korona.task.outputSettings.SortType;
+import ru.korona.task.outputsettings.OrderType;
+import ru.korona.task.outputsettings.SortType;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode

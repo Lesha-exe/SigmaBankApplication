@@ -3,7 +3,7 @@ package ru.korona.task.models;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.korona.task.outputSettings.StatisticsType;
+import ru.korona.task.outputsettings.StatisticsType;
 
 @AllArgsConstructor
 @Getter

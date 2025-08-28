@@ -1,12 +1,12 @@
 package ru.korona.task.services;
 
+import org.springframework.stereotype.Component;
 import ru.korona.task.exceptions.*;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.StatisticsConfig;
-import ru.korona.task.outputSettings.OrderType;
-import ru.korona.task.outputSettings.OutputType;
-import ru.korona.task.outputSettings.SortType;
-import org.springframework.stereotype.Component;
+import ru.korona.task.outputsettings.OrderType;
+import ru.korona.task.outputsettings.OutputType;
+import ru.korona.task.outputsettings.SortType;
 
 @Component
 public class ArgumentsReader {

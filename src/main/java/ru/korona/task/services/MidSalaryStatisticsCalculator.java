@@ -2,7 +2,7 @@ package ru.korona.task.services;
 
 import ru.korona.task.models.Department;
 import ru.korona.task.models.Employee;
-import ru.korona.task.outputSettings.StatisticsType;
+import ru.korona.task.outputsettings.StatisticsType;
 
 public class MidSalaryStatisticsCalculator implements StatisticsCalculator {
     @Override

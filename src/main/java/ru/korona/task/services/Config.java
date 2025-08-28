@@ -1,9 +1,9 @@
 package ru.korona.task.services;
 
 import java.util.Map;
-import ru.korona.task.outputSettings.WorkerType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.korona.task.outputsettings.WorkerType;
 
 @Configuration
 public class Config {

@@ -7,11 +7,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import ru.korona.task.models.*;
-import ru.korona.task.outputSettings.OrderType;
-import ru.korona.task.outputSettings.SortType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.korona.task.models.*;
+import ru.korona.task.outputsettings.OrderType;
+import ru.korona.task.outputsettings.SortType;
 
 @Component
 public class DepartmentService {
@@ -89,7 +89,7 @@ public class DepartmentService {
     }
 
     private static void writeManagerToFile(Manager manager, BufferedWriter writer) {
-        writeWorkers(
+        writeWorkerToFile(
                 String.format(
                         "Manager, %d, %s, %d",
                         manager.getId(), manager.getName(), manager.getSalary()),
@@ -97,7 +97,7 @@ public class DepartmentService {
     }
 
     private static void writeEmployeeToFile(Employee employee, BufferedWriter writer) {
-        writeWorkers(
+        writeWorkerToFile(
                 String.format(
                         "Employee, %d, %s, %d, %d",
                         employee.getId(),
@@ -107,7 +107,7 @@ public class DepartmentService {
                 writer);
     }
 
-    private static void writeWorkers(String workerData, BufferedWriter writer) {
+    private static void writeWorkerToFile(String workerData, BufferedWriter writer) {
         try {
             writer.write(workerData);
             writer.newLine();

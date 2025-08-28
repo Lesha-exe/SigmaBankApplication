@@ -7,4 +7,8 @@ import lombok.Getter;
 @Getter
 public class WorkerWithIncorrectData implements Worker {
     private String[] data;
+
+    public String toString() {
+        return String.join(", ", data);
+    }
 }

@@ -1,4 +1,4 @@
-package ru.korona.task.outputSettings;
+package ru.korona.task.outputsettings;
 
 public enum StatisticsType {
     MAX_SALARY,

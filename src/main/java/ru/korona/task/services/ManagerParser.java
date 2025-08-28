@@ -1,5 +1,6 @@
 package ru.korona.task.services;
 
+import org.apache.commons.lang3.StringUtils;
 import ru.korona.task.models.Manager;
 import ru.korona.task.models.Worker;
 import ru.korona.task.models.WorkerWithIncorrectData;
@@ -24,15 +25,9 @@ public class ManagerParser implements WorkerParser {
     }
 
     private boolean isValid(Manager manager) {
-        if (manager.getId() < 0 || manager.getId().equals(null)) {
-            return false;
-        } else if (manager.getSalary() < 0 || manager.getSalary().equals(null)) {
-            return false;
-        } else if (manager.getName().equals(null)) {
-            return false;
-        } else if (manager.getDepartment().equals(null)) {
-            return false;
-        }
-        return true;
+        return manager.getId() > 0
+                && manager.getSalary() > 0
+                && StringUtils.isNotBlank(manager.getName())
+                && StringUtils.isNotBlank(manager.getDepartment());
     }
 }

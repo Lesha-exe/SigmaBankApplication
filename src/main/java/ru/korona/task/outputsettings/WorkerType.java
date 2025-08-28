@@ -1,4 +1,4 @@
-package ru.korona.task.outputSettings;
+package ru.korona.task.outputsettings;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
