@@ -32,8 +32,7 @@ public class WorkerDataApplication {
             }
             List<DepartmentStatistics> departmentStatistics =
                     departmentStatisticsService.calculateStatistics(departments);
-            if ((appArguments.getStatisticsConfig().getIsStatisticsPresent())
-                    && (appArguments.getStatisticsConfig().getOutputFilePath() != null)) {
+            if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
                 statisticsDataStorage.storeStatisticsToFile(departmentStatistics, appArguments);
             } else {
                 statisticsDataStorage.storeStatisticsToConsole(departmentStatistics, appArguments);

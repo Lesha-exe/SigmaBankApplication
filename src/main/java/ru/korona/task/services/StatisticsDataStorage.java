@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.outputsettings.StatisticsType;
@@ -28,11 +29,11 @@ public class StatisticsDataStorage {
             bufferedWriter.newLine();
             departmentStatisticsList.stream()
                     .forEach(
-                            departmentStatistics -> {
-                                writeDataToFile(
-                                        createDepartmentStatisticsLine(departmentStatistics),
-                                        bufferedWriter);
-                            });
+                            departmentStatistics ->
+                                    writeDataToFile(
+                                            createDepartmentStatisticsLine(departmentStatistics),
+                                            bufferedWriter)
+                    );
         } catch (Exception exception) {
             System.out.println(
                     "Cannot write statistics to file: "
