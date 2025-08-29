@@ -1,10 +1,12 @@
 package ru.korona.task.services;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import ru.korona.task.models.Manager;
 import ru.korona.task.models.Worker;
 import ru.korona.task.models.WorkerWithIncorrectData;
 
+@Component
 public class ManagerParser implements WorkerParser {
     @Override
     public Worker parse(String[] workerData) {

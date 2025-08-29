@@ -3,10 +3,13 @@ package ru.korona.task.services;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.outputsettings.StatisticsType;
 
+@Component
 public class DepartmentStatisticsService {
     private List<StatisticsCalculator> statisticsCalculator;
 

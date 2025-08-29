@@ -2,3 +2,5 @@ dataReader:
   inputDir: input
 departments:
   outputDir: output
+statistics:
+  header: department, min, max, mid

@@ -7,7 +7,6 @@ import ru.korona.task.models.Worker;
 import ru.korona.task.models.WorkerWithIncorrectData;
 import ru.korona.task.outputsettings.WorkerType;
 
-@Component
 @AllArgsConstructor
 public class WorkerDataParser {
     private Map<WorkerType, WorkerParser> parsers;
