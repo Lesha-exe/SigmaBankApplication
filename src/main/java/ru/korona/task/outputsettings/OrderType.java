@@ -16,6 +16,6 @@ public enum OrderType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("ERROR! Incorrect order type parameter: " + name);
+        throw new IllegalArgumentException("Incorrect order type parameter: " + name);
     }
 }

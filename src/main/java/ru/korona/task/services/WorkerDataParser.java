@@ -2,7 +2,6 @@ package ru.korona.task.services;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.korona.task.models.Worker;
 import ru.korona.task.models.WorkerWithIncorrectData;
 import ru.korona.task.outputsettings.WorkerType;

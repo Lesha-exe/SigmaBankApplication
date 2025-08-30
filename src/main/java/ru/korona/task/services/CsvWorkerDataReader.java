@@ -4,7 +4,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,11 +17,14 @@ import ru.korona.task.models.WorkerWithIncorrectData;
 
 @Component
 public class CsvWorkerDataReader implements WorkerDataReader {
-    private WorkerDataParser workerDataParser;
+    private final WorkerDataParser workerDataParser;
     private String inputDirectory;
-    private Path filePath;// = FileSystems.getDefault().getPath(inputDirectory, "file1.sb");
+    private Path filePath; // = FileSystems.getDefault().getPath(inputDirectory, "file1.sb");
 
-    public CsvWorkerDataReader(@Value("${dataReader.inputDir}") String inputDirectory) {
+    public CsvWorkerDataReader(
+            WorkerDataParser workerDataParser,
+            @Value("${dataReader.inputDir}") String inputDirectory) {
+        this.workerDataParser = workerDataParser;
         this.filePath = FileSystems.getDefault().getPath(inputDirectory, "file1.sb");
     }
 

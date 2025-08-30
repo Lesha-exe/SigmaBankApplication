@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
@@ -15,7 +14,6 @@ import ru.korona.task.outputsettings.StatisticsType;
 @Component
 public class StatisticsDataStorage {
     private static final String DEPARTMENT_HEADER_KEY = "department";
-
     private static List<String> statisticsHeaders;
 
     public StatisticsDataStorage(@Value("${statistics.header}") List<String> statisticsHeaders) {
@@ -44,8 +42,7 @@ public class StatisticsDataStorage {
                             departmentStatistics ->
                                     writeDataToFile(
                                             createDepartmentStatisticsLine(departmentStatistics),
-                                            bufferedWriter)
-                    );
+                                            bufferedWriter));
         } catch (Exception exception) {
             System.out.println(
                     "Cannot write statistics to file: "
@@ -61,26 +58,27 @@ public class StatisticsDataStorage {
                 .map(header -> getStatisticsColumnValue(departmentStatistics, header))
                 .collect(Collectors.joining(", "));
 
-
-//                String.format(
-//                "%s, %2f, %2f, %2f",
-//                departmentStatistics.getDepartmentName(),
-//                departmentStatistics
-//                        .getStatisticsData()
-//                        .getOrDefault(StatisticsType.MIN_SALARY, 0.0),
-//                departmentStatistics
-//                        .getStatisticsData()
-//                        .getOrDefault(StatisticsType.MAX_SALARY, 0.0),
-//                departmentStatistics
-//                        .getStatisticsData()
-//                        .getOrDefault(StatisticsType.MID_SALARY, 0.0));
+        //                String.format(
+        //                "%s, %2f, %2f, %2f",
+        //                departmentStatistics.getDepartmentName(),
+        //                departmentStatistics
+        //                        .getStatisticsData()
+        //                        .getOrDefault(StatisticsType.MIN_SALARY, 0.0),
+        //                departmentStatistics
+        //                        .getStatisticsData()
+        //                        .getOrDefault(StatisticsType.MAX_SALARY, 0.0),
+        //                departmentStatistics
+        //                        .getStatisticsData()
+        //                        .getOrDefault(StatisticsType.MID_SALARY, 0.0));
     }
 
-    private static String getStatisticsColumnValue(DepartmentStatistics departmentStatistics, String header) {
+    private static String getStatisticsColumnValue(
+            DepartmentStatistics departmentStatistics, String header) {
         if (DEPARTMENT_HEADER_KEY.equals(header)) {
             return departmentStatistics.getDepartmentName();
         } else {
-            final Double statValue = departmentStatistics.getStatisticsData().get(StatisticsType.from(header));
+            final Double statValue =
+                    departmentStatistics.getStatisticsData().get(StatisticsType.from(header));
             return statValue.toString();
         }
     }

@@ -60,15 +60,6 @@
                 <version>2.43.0</version>
                  <configuration>
                      <java>
-                         <mainClass>com.baeldung.demo.SigmaBankApp</mainClass>
-                         <layout>JAR</layout>
-                         <executions>
-                             <execution>
-                                 <goals>
-                                     <goal>repackage</goal>
-                                 </goals>
-                             </execution>
-                         </executions>
                          <includes>
                              <include>src/**/*.java</include>
                          </includes>

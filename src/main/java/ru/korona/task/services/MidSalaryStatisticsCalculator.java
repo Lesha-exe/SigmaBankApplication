@@ -1,9 +1,11 @@
 package ru.korona.task.services;
 
+import org.springframework.stereotype.Component;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.Employee;
 import ru.korona.task.outputsettings.StatisticsType;
 
+@Component
 public class MidSalaryStatisticsCalculator implements StatisticsCalculator {
     @Override
     public double calculate(Department department) {

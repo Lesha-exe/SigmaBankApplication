@@ -16,6 +16,6 @@ public enum SortType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("ERROR! Incorrect sort type parameter: " + name);
+        throw new IllegalArgumentException("Incorrect sort type parameter: " + name);
     }
 }

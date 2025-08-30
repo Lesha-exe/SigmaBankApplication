@@ -1,6 +1,5 @@
 package ru.korona.task.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.korona.task.exceptions.*;
 import ru.korona.task.models.AppArguments;

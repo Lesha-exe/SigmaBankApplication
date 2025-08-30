@@ -3,15 +3,16 @@ package ru.korona.task.services;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.outputsettings.StatisticsType;
 
 @Component
+@RequiredArgsConstructor
 public class DepartmentStatisticsService {
-    private List<StatisticsCalculator> statisticsCalculator;
+    private final List<StatisticsCalculator> statisticsCalculator;
 
     public List<DepartmentStatistics> calculateStatistics(List<Department> departments) {
         return departments.stream()

@@ -16,6 +16,6 @@ public enum OutputType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("ERROR! Incorrect output type parameter: " + name);
+        throw new IllegalArgumentException("Incorrect output type parameter: " + name);
     }
 }
