@@ -21,7 +21,7 @@ public class SigmaBankApp implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         LOG.info("EXECUTING : command line runner");
         workerDataApplication.run(args);
     }

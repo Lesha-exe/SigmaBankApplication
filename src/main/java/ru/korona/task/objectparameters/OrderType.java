@@ -1,0 +1,21 @@
+package ru.korona.task.objectparameters;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Getter
+public enum OrderType {
+    ASC("asc"),
+    DESC("desc");
+    private final String name;
+
+    public static OrderType from(String name) {
+        for (OrderType type : values()) {
+            if (type.getName().equals(name)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Incorrect order type parameter: " + name);
+    }
+}

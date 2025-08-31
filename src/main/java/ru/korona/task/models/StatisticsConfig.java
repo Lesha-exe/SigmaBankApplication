@@ -1,7 +1,7 @@
 package ru.korona.task.models;
 
 import lombok.*;
-import ru.korona.task.outputsettings.OutputType;
+import ru.korona.task.objectparameters.OutputType;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode

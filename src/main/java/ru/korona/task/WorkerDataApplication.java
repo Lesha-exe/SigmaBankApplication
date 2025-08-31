@@ -6,7 +6,12 @@ import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.DepartmentStatistics;
-import ru.korona.task.services.*;
+import ru.korona.task.service.*;
+import ru.korona.task.service.reader.ArgumentsReader;
+import ru.korona.task.service.reader.WorkerData;
+import ru.korona.task.service.reader.WorkerDataReader;
+import ru.korona.task.service.statistics.DepartmentStatisticsService;
+import ru.korona.task.service.statistics.StatisticsDataStorage;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +40,7 @@ public class WorkerDataApplication {
             if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
                 statisticsDataStorage.storeStatisticsToFile(departmentStatistics, appArguments);
             } else {
-                statisticsDataStorage.storeStatisticsToConsole(departmentStatistics, appArguments);
+                statisticsDataStorage.storeStatisticsToConsole(departmentStatistics);
             }
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
