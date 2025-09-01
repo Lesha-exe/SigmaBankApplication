@@ -12,13 +12,13 @@ public class EmployeeParser implements WorkerParser {
     public Worker parse(String[] workerData) {
         Employee.EmployeeBuilder employeeBuilder = Employee.builder();
         try {
-            employeeBuilder.id(Integer.parseInt(workerData[1]));
-            employeeBuilder.salary(Double.parseDouble(workerData[3]));
-            employeeBuilder.managerId(Integer.parseInt(workerData[4]));
+            employeeBuilder.id(Integer.parseInt(workerData[1].trim()));
+            employeeBuilder.salary(Double.parseDouble(workerData[3].trim()));
+            employeeBuilder.managerId(Integer.parseInt(workerData[4].trim()));
         } catch (NumberFormatException exception) {
             return new WorkerWithIncorrectData(workerData);
         }
-        employeeBuilder.name(workerData[2]);
+        employeeBuilder.name(workerData[2].trim());
         Employee employee = employeeBuilder.build();
         if (!isValid(employee)) {
             return new WorkerWithIncorrectData(workerData);

@@ -9,7 +9,7 @@ import ru.korona.task.objectparameters.OutputType;
 @Getter
 @Builder
 public class StatisticsConfig {
-    private final Boolean isStatisticsPresent;
+    private final boolean isStatisticsPresent;
     private final OutputType outputType;
     private final String outputFilePath;
 }

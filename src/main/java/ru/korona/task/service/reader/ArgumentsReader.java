@@ -1,5 +1,6 @@
 package ru.korona.task.service.reader;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.korona.task.exceptions.*;
 import ru.korona.task.models.AppArguments;
@@ -9,6 +10,7 @@ import ru.korona.task.objectparameters.OutputType;
 import ru.korona.task.objectparameters.SortType;
 
 @Component
+@Slf4j
 public class ArgumentsReader {
     private static final String SORT_ARGUMENT_PREFIX = "--sort=";
     private static final String SORT_ARGUMENT_SHORT_PREFIX = "-s=";
@@ -56,7 +58,7 @@ public class ArgumentsReader {
             throw new AppArgumentsException(
                     "You entered order type," + " but sort type parameter is missing...");
         }
-        Boolean statFlag = appArguments.getStatisticsConfig().getIsStatisticsPresent();
+        boolean statFlag = appArguments.getStatisticsConfig().isStatisticsPresent();
         OutputType outputType = appArguments.getStatisticsConfig().getOutputType();
         if (!statFlag && outputType != null) {
             throw new AppArgumentsException("Missing --stat operator ");

@@ -32,7 +32,7 @@ public class WorkerDataApplication {
                             workerData.getWorkersWithCorrectData(), appArguments);
             departmentServices.storeDepartments(departments);
             invalidDataService.storeInvalidData(workerData.getWorkersWithIncorrectData());
-            if (!appArguments.getStatisticsConfig().getIsStatisticsPresent()) {
+            if (!appArguments.getStatisticsConfig().isStatisticsPresent()) {
                 return;
             }
             List<DepartmentStatistics> departmentStatistics =
