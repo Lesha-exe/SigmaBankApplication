@@ -1,25 +1,30 @@
 package ru.korona.task.service.statistics;
 
-import java.io.BufferedWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.objectparameters.StatisticsType;
+import ru.korona.task.service.FileService;
 
 @Component
 @Slf4j
 public class StatisticsDataStorage {
     private static final String DEPARTMENT_HEADER_KEY = "department";
     private static List<String> statisticsHeaders;
+    private final FileService fileService;
 
-    public StatisticsDataStorage(@Value("${statistics.header}") List<String> statisticsHeaders) {
+    public StatisticsDataStorage(@Value("${statistics.header}") List<String> statisticsHeaders,
+                                 FileService fileService) {
         this.statisticsHeaders = statisticsHeaders;
+        this.fileService = fileService;
     }
 
     public void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList) {
@@ -34,23 +39,13 @@ public class StatisticsDataStorage {
     public void storeStatisticsToFile(
             List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
         Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
-            Files.createDirectories(path.getParent());
-            bufferedWriter.write(headerToString());
-            bufferedWriter.newLine();
-            departmentStatisticsList.stream()
-                    .forEach(
-                            departmentStatistics ->
-                                    writeDataToFile(
-                                            createDepartmentStatisticsLine(departmentStatistics),
-                                            bufferedWriter));
-        } catch (Exception exception) {
-            log.info(
-                    "Cannot write statistics to file: "
-                            + path.getFileName()
-                            + ". Exception: "
-                            + exception.getMessage());
-        }
+        List<String> statisticsData = Stream.concat(
+                Stream.of(headerToString()),
+                departmentStatisticsList
+                        .stream()
+                        .map(StatisticsDataStorage::createDepartmentStatisticsLine)
+        ).toList();
+        fileService.storeData(statisticsData, path);
     }
 
     private static String createDepartmentStatisticsLine(
@@ -68,15 +63,6 @@ public class StatisticsDataStorage {
             final Double statValue =
                     departmentStatistics.getStatisticsData().get(StatisticsType.from(header));
             return statValue.toString();
-        }
-    }
-
-    private static void writeDataToFile(String data, BufferedWriter writer) {
-        try {
-            writer.write(data);
-            writer.newLine();
-        } catch (Exception exception) {
-            log.info("Error while writing file: " + exception.getMessage());
         }
     }
 

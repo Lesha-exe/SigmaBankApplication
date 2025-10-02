@@ -4,3 +4,5 @@ departments:
   outputDir: output
 statistics:
   header: department, min, max, mid
+invalidData:
+  outputFileName: error.log
