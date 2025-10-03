@@ -3,6 +3,7 @@ package ru.korona.task.service.statistics;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.DepartmentStatistics;
+import ru.korona.task.objectparameters.OutputType;
 import ru.korona.task.objectparameters.StatisticsType;
 import ru.korona.task.service.FileService;
 
@@ -27,25 +29,32 @@ public class StatisticsDataStorage {
         this.fileService = fileService;
     }
 
-    public void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList) {
-        System.out.println(headerToString());
-        departmentStatisticsList.stream()
-                .forEach(
-                        departmentStatistics ->
-                                System.out.println(
-                                        createDepartmentStatisticsLine(departmentStatistics)));
+    public void storeStatistics(List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments){
+        if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
+            storeStatisticsToFile(departmentStatisticsList, appArguments);
+        } else {
+            storeStatisticsToConsole(departmentStatisticsList);
+        }
+    }
+    private void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList) {
+        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
+        statisticsData.forEach(System.out::println);
     }
 
-    public void storeStatisticsToFile(
+    private void storeStatisticsToFile(
             List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
         Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
-        List<String> statisticsData = Stream.concat(
+        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
+        fileService.storeData(statisticsData, path);
+    }
+
+    private List<String> convertToStatisticsLine(List<DepartmentStatistics> departmentStatisticsList){
+        return  Stream.concat(
                 Stream.of(headerToString()),
                 departmentStatisticsList
                         .stream()
                         .map(StatisticsDataStorage::createDepartmentStatisticsLine)
         ).toList();
-        fileService.storeData(statisticsData, path);
     }
 
     private static String createDepartmentStatisticsLine(

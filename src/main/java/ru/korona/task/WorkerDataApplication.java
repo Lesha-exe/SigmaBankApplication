@@ -37,11 +37,7 @@ public class WorkerDataApplication {
             }
             List<DepartmentStatistics> departmentStatistics =
                     departmentStatisticsService.calculateStatistics(departments);
-            if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
-                statisticsDataStorage.storeStatisticsToFile(departmentStatistics, appArguments);
-            } else {
-                statisticsDataStorage.storeStatisticsToConsole(departmentStatistics);
-            }
+            statisticsDataStorage.storeStatistics(departmentStatistics, appArguments);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
