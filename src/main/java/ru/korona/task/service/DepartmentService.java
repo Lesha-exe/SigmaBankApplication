@@ -77,11 +77,6 @@ public class DepartmentService {
     }
 
     public void storeDepartments(List<Department> departments) {
-        try {
-            Files.createDirectories(Path.of(outputDirectory));
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
         departments.forEach(
                 department -> {
                     String departmentName = department.getManager().getDepartment();
