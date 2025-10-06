@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,7 @@ public class FileService {
     public void storeData(List<String> data, Path filePath) {
         createDirectoryIfNotExist();
         try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-            for(String dataLine: data){
+            for (String dataLine : data) {
                 writeDataToFile(dataLine, writer);
             }
         } catch (Exception exception) {
@@ -43,7 +42,7 @@ public class FileService {
         }
     }
 
-    private void createDirectoryIfNotExist(){
+    private void createDirectoryIfNotExist() {
         try {
             Files.createDirectories(Path.of(outputDirectory));
         } catch (IOException exception) {
@@ -51,4 +50,3 @@ public class FileService {
         }
     }
 }
-

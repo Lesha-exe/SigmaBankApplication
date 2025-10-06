@@ -1,15 +1,11 @@
 package ru.korona.task.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,8 +26,8 @@ public class DepartmentService {
     private final FileService fileService;
     private final String outputDirectory;
 
-    public DepartmentService(@Value("${departments.outputDir}") String outputDirectory,
-                             FileService fileService) {
+    public DepartmentService(
+            @Value("${departments.outputDir}") String outputDirectory, FileService fileService) {
         this.fileService = fileService;
         this.outputDirectory = outputDirectory;
     }
@@ -81,21 +77,19 @@ public class DepartmentService {
                 department -> {
                     String departmentName = department.getManager().getDepartment();
                     Path path = Path.of(outputDirectory, departmentName + ".sb");
-                    List<String> workerData = Stream.concat(
-                            Stream.of(createManagerLine(department.getManager())),
-                            department
-                                    .getEmployeeList()
-                                    .stream()
-                                    .map(DepartmentService::createEmployeeLine)
-                    ).toList();
+                    List<String> workerData =
+                            Stream.concat(
+                                            Stream.of(createManagerLine(department.getManager())),
+                                            department.getEmployeeList().stream()
+                                                    .map(DepartmentService::createEmployeeLine))
+                                    .toList();
                     fileService.storeData(workerData, path);
                 });
     }
 
     private static String createManagerLine(Manager manager) {
         return String.format(
-                "Manager, %d, %s, %.2f",
-                manager.getId(), manager.getName(), manager.getSalary());
+                "Manager, %d, %s, %.2f", manager.getId(), manager.getName(), manager.getSalary());
     }
 
     private static String createEmployeeLine(Employee employee) {

@@ -1,7 +1,6 @@
 package ru.korona.task.service;
 
 import java.util.Map;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.korona.task.objectparameters.WorkerType;
@@ -18,4 +17,3 @@ public class Config {
                 Map.of(WorkerType.MANAGER, managerParser, WorkerType.EMPLOYEE, employeeParser));
     }
 }
-
