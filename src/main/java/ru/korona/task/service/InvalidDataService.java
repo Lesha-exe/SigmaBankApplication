@@ -26,6 +26,6 @@ public class InvalidDataService {
     public void storeInvalidData(List<Worker> workersWithIncorrectData) {
         Path path = Path.of(outputDirectory, outputFileName);
         List<String> invalidData = workersWithIncorrectData.stream().map(String::valueOf).toList();
-        fileService.storeData(invalidData, path);
+        fileService.storeData(invalidData, outputDirectory, outputFileName);
     }
 }

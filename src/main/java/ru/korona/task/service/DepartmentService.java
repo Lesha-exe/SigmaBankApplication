@@ -1,6 +1,5 @@
 package ru.korona.task.service;
 
-import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +24,15 @@ public class DepartmentService {
     private static final Comparator<Employee> NAME_COMPARATOR_DESC = NAME_COMPARATOR_ASC.reversed();
     private final FileService fileService;
     private final String outputDirectory;
+    private final String outputFileExtensions;
 
     public DepartmentService(
-            @Value("${departments.outputDir}") String outputDirectory, FileService fileService) {
+            @Value("${departments.outputDir}") String outputDirectory,
+            @Value("${departments.outputFileExtensions}") String outputFileExtensions,
+            FileService fileService) {
         this.fileService = fileService;
         this.outputDirectory = outputDirectory;
+        this.outputFileExtensions = outputFileExtensions;
     }
 
     public List<Department> createDepartments(List<Worker> workers, AppArguments appArguments) {
@@ -75,15 +78,15 @@ public class DepartmentService {
     public void storeDepartments(List<Department> departments) {
         departments.forEach(
                 department -> {
-                    String departmentName = department.getManager().getDepartment();
-                    Path path = Path.of(outputDirectory, departmentName + ".sb");
+                    String departmentName =
+                            department.getManager().getDepartment() + outputFileExtensions;
                     List<String> workerData =
                             Stream.concat(
                                             Stream.of(createManagerLine(department.getManager())),
                                             department.getEmployeeList().stream()
                                                     .map(DepartmentService::createEmployeeLine))
                                     .toList();
-                    fileService.storeData(workerData, path);
+                    fileService.storeData(workerData, outputDirectory, departmentName);
                 });
     }
 
