@@ -61,7 +61,7 @@ public class DepartmentService {
 
     private void sortEmployees(
             List<Employee> departmentEmployees, SortType sortType, OrderType orderType) {
-        if (sortType == null) {
+        if (sortType == null || departmentEmployees == null) {
             return;
         }
         departmentEmployees.sort(getEmployeesComparator(sortType, orderType));

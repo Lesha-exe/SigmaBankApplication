@@ -1,14 +1,21 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import ru.korona.task.models.*;
+import ru.korona.task.models.Manager;
+import ru.korona.task.models.Employee;
+import ru.korona.task.models.Worker;
+import ru.korona.task.models.AppArguments;
+import ru.korona.task.models.Department;
 import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.SortType;
 import ru.korona.task.service.DepartmentService;
 import ru.korona.task.service.FileService;
-import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import java.util.List;
 
 public class DepartmentServiceTest {
@@ -27,11 +34,14 @@ public class DepartmentServiceTest {
 
     @Test
     void createDepartments() {
+        // given
         List<Worker> workers = createWorkerList();
         AppArguments args = createAppArgumentsObject(SortType.SALARY, OrderType.ASC);
 
+        // when
         List<Department> departments = departmentService.createDepartments(workers, args);
 
+        // then
         assertThat(departments).hasSize(2);
         Department HR = departments.get(0);
         assertThat(HR.getManager().getName()).isEqualTo("Manager 1");
@@ -44,8 +54,48 @@ public class DepartmentServiceTest {
                 .containsExactly("Employee 3");
     }
 
+    @Test
+    void createDepartmentWithoutEmployees(){
+        // given
+        Manager manager = createManager(1, "Manager 1", 2000.0, "HR");
+        List<Worker> workers = List.of(manager);
+        AppArguments args = createAppArgumentsObject(SortType.SALARY, OrderType.ASC);
+
+        // when
+        List<Department> department = departmentService.createDepartments(workers, args);
+
+        // then
+        assertThat(department).hasSize(1);
+        Department IT = department.get(0);
+        assertThat(IT.getManager().getName()).isEqualTo("Manager 1");
+        assertThat(IT.getEmployeeList()).isNullOrEmpty();
+    }
+
+    @Test
+    void storeDepartments(){
+        // given
+        List<Worker> workers = createWorkerList();
+        AppArguments args = createAppArgumentsObject(SortType.SALARY, OrderType.ASC);
+        ArgumentCaptor<List<String>> dataCaptor = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<String> directoryCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> fileNameCaptor = ArgumentCaptor.forClass(String.class);
+
+        // when
+        List<Department> departments = departmentService.createDepartments(workers, args);
+        departmentService.storeDepartments(departments);
+
+        // then
+        verify(fileService, times(2))
+                .storeData(dataCaptor.capture(),
+                        directoryCaptor.capture(),
+                        fileNameCaptor.capture());
+
+        List<String> data = dataCaptor.getValue();
+        assertThat(directoryCaptor.getValue()).isEqualTo("output/");
+        assertThat(fileNameCaptor.getValue()).isEqualTo("IT.txt");
+    }
+
     private List<Worker> createWorkerList(){
-        List<Worker> workerList = new ArrayList<>();
         Manager manager1 = createManager(1, "Manager 1", 2000.0, "HR");
         Manager manager2 = createManager(2, "Manager 2", 3000.0, "IT");
         Employee employee1 = createEmployee(11, "Employee 1", 1500.0, 1);
@@ -56,29 +106,29 @@ public class DepartmentServiceTest {
 
     private Manager createManager(Integer id, String name,
                                   Double salary, String department){
-        Manager.ManagerBuilder managerBuilder = Manager.builder();
-        managerBuilder.id(id);
-        managerBuilder.name(name);
-        managerBuilder.salary(salary);
-        managerBuilder.department(department);
-        return managerBuilder.build();
+        return Manager.builder()
+                .id(id)
+                .name(name)
+                .salary(salary)
+                .department(department)
+                .build();
     }
 
     private Employee createEmployee(Integer id, String name,
                                     Double salary, Integer managerId){
-        Employee.EmployeeBuilder employeeBuilder = Employee.builder();
-        employeeBuilder.id(id);
-        employeeBuilder.name(name);
-        employeeBuilder.salary(salary);
-        employeeBuilder.managerId(managerId);
-        return employeeBuilder.build();
+        return Employee.builder()
+                .id(id)
+                .name(name)
+                .salary(salary)
+                .managerId(managerId)
+                .build();
     }
 
     private AppArguments createAppArgumentsObject(SortType sortType, OrderType orderType){
-        AppArguments.AppArgumentsBuilder appArgumentsBuilder = AppArguments.builder();
-        appArgumentsBuilder.sortType(sortType);
-        appArgumentsBuilder.order(orderType);
-        return appArgumentsBuilder.build();
+        return AppArguments.builder()
+                .sortType(sortType)
+                .order(orderType)
+                .build();
     }
 
 }
