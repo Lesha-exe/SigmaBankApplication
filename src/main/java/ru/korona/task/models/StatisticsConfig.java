@@ -3,13 +3,13 @@ package ru.korona.task.models;
 import lombok.*;
 import ru.korona.task.objectparameters.OutputType;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
-@Builder
+@Setter
 public class StatisticsConfig {
-    private final boolean isStatisticsPresent;
-    private final OutputType outputType;
-    private final String outputFilePath;
+    private boolean isStatisticsPresent;
+    private OutputType outputType;
+    private String outputFilePath;
 }

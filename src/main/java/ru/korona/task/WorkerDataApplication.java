@@ -7,7 +7,8 @@ import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.service.*;
-import ru.korona.task.service.reader.ArgumentsReader;
+//import ru.korona.task.service.reader.ArgumentsReader;
+import ru.korona.task.service.reader.ArgumentsReader2;
 import ru.korona.task.service.reader.WorkerData;
 import ru.korona.task.service.reader.WorkerDataReader;
 import ru.korona.task.service.statistics.DepartmentStatisticsService;
@@ -16,7 +17,7 @@ import ru.korona.task.service.statistics.StatisticsDataStorage;
 @Component
 @RequiredArgsConstructor
 public class WorkerDataApplication {
-    private final ArgumentsReader argumentsReader;
+    private final ArgumentsReader2 argumentsReader;
     private final WorkerDataReader workerDataReader;
     private final DepartmentService departmentServices;
     private final DepartmentStatisticsService departmentStatisticsService;

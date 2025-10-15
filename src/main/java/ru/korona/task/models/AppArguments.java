@@ -4,13 +4,14 @@ import lombok.*;
 import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.SortType;
 
-@RequiredArgsConstructor
+
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
-@Builder
+@Setter
 public class AppArguments {
-    private final SortType sortType;
-    private final OrderType order;
-    private final StatisticsConfig statisticsConfig;
+    private SortType sortType;
+    private OrderType order;
+    private StatisticsConfig statisticsConfig;
 }

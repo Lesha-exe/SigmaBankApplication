@@ -125,10 +125,10 @@ public class DepartmentServiceTest {
     }
 
     private AppArguments createAppArgumentsObject(SortType sortType, OrderType orderType){
-        return AppArguments.builder()
-                .sortType(sortType)
-                .order(orderType)
-                .build();
+        AppArguments appArguments = new AppArguments();
+        appArguments.setSortType(sortType);
+        appArguments.setOrder(orderType);
+        return appArguments;
     }
 
 }
