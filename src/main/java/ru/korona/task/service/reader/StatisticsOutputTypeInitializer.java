@@ -7,10 +7,11 @@ import ru.korona.task.objectparameters.OutputType;
 
 import java.util.List;
 
-import static ru.korona.task.service.reader.ArgumentKey.*;
+import static ru.korona.task.service.reader.ArgumentKey.OUTPUT_ARGUMENT_PREFIX;
+import static ru.korona.task.service.reader.ArgumentKey.OUTPUT_ARGUMENT_SHORT_PREFIX;
 
 @Component
-public class PathArgumentInitializer implements ArgumentsInitializer{
+public class StatisticsOutputTypeInitializer implements ArgumentsInitializer {
     @Override
     public void initialize(String argumentValue, AppArguments appArguments) {
         StatisticsConfig statisticsConfig = appArguments.getStatisticsConfig();
@@ -18,11 +19,11 @@ public class PathArgumentInitializer implements ArgumentsInitializer{
             statisticsConfig = new StatisticsConfig();
             appArguments.setStatisticsConfig(statisticsConfig);
         }
-        statisticsConfig.setOutputFilePath(argumentValue);
+        statisticsConfig.setOutputType(OutputType.from(argumentValue));
     }
 
     @Override
     public List<String> argumentKeys() {
-        return List.of(PATH_ARGUMENT_PREFIX);
+        return List.of(OUTPUT_ARGUMENT_PREFIX, OUTPUT_ARGUMENT_SHORT_PREFIX);
     }
 }
