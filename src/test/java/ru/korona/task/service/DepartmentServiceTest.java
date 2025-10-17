@@ -1,3 +1,5 @@
+package ru.korona.task.service;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -9,8 +11,6 @@ import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.Department;
 import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.SortType;
-import ru.korona.task.service.DepartmentService;
-import ru.korona.task.service.FileService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;

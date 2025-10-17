@@ -6,6 +6,7 @@ import ru.korona.task.objectparameters.SortType;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter

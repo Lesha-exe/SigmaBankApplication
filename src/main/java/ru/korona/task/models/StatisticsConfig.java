@@ -4,6 +4,7 @@ import lombok.*;
 import ru.korona.task.objectparameters.OutputType;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
