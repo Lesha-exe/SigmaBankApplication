@@ -11,8 +11,7 @@ import ru.korona.task.objectparameters.SortType;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ArgumentsReaderTest {
     private ArgumentsReader argumentsReader;
@@ -28,7 +27,7 @@ public class ArgumentsReaderTest {
         when(orderInitializer.argumentKeys()).thenReturn(List.of("--order"));
 
         pathInitializer = mock(ArgumentsInitializer.class);
-        when(orderInitializer.argumentKeys()).thenReturn(List.of("--path"));
+        when(pathInitializer.argumentKeys()).thenReturn(List.of("--path"));
 
         sortInitializer = mock(ArgumentsInitializer.class);
         when(sortInitializer.argumentKeys()).thenReturn(List.of("--sort"));
