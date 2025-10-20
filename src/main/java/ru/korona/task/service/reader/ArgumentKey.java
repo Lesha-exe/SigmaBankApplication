@@ -2,7 +2,6 @@ package ru.korona.task.service.reader;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArgumentKey {

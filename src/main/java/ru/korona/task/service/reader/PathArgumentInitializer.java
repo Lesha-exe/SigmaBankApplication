@@ -1,20 +1,18 @@
 package ru.korona.task.service.reader;
 
+import static ru.korona.task.service.reader.ArgumentKey.*;
+
+import java.util.List;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.StatisticsConfig;
-import ru.korona.task.objectparameters.OutputType;
-
-import java.util.List;
-
-import static ru.korona.task.service.reader.ArgumentKey.*;
 
 @Component
-public class PathArgumentInitializer implements ArgumentsInitializer{
+public class PathArgumentInitializer implements ArgumentsInitializer {
     @Override
     public void initialize(String argumentValue, AppArguments appArguments) {
         StatisticsConfig statisticsConfig = appArguments.getStatisticsConfig();
-        if(statisticsConfig == null){
+        if (statisticsConfig == null) {
             statisticsConfig = new StatisticsConfig();
             appArguments.setStatisticsConfig(statisticsConfig);
         }

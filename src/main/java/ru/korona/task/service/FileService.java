@@ -20,11 +20,7 @@ public class FileService {
                 writeDataToFile(dataLine, writer);
             }
         } catch (Exception exception) {
-            log.error(
-                    "Error while saving data to directory: "
-                    + path
-                    + "Exception: "
-                    + exception);
+            log.error("Error while saving data to directory: " + path + "Exception: " + exception);
         }
     }
 
@@ -47,9 +43,7 @@ public class FileService {
             writer.write(data);
             writer.newLine();
         } catch (Exception exception) {
-            log.error(
-                    "Error while writing file: "
-                    + exception.getMessage());
+            log.error("Error while writing file: " + exception.getMessage());
         }
     }
 

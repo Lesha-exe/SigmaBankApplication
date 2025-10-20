@@ -1,5 +1,9 @@
 package ru.korona.task.service.reader;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.korona.task.models.AppArguments;
@@ -7,11 +11,6 @@ import ru.korona.task.models.StatisticsConfig;
 import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.OutputType;
 import ru.korona.task.objectparameters.SortType;
-
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
 
 public class ArgumentsReaderTest {
     private ArgumentsReader argumentsReader;
@@ -38,31 +37,30 @@ public class ArgumentsReaderTest {
         statisticsOutputInitializer = mock(ArgumentsInitializer.class);
         when(statisticsOutputInitializer.argumentKeys()).thenReturn(List.of("--output"));
 
-        List<ArgumentsInitializer> initializers = List.of(
-                orderInitializer,
-                pathInitializer,
-                sortInitializer,
-                statisticsPresentInitializer,
-                statisticsOutputInitializer);
+        List<ArgumentsInitializer> initializers =
+                List.of(
+                        orderInitializer,
+                        pathInitializer,
+                        sortInitializer,
+                        statisticsPresentInitializer,
+                        statisticsOutputInitializer);
         argumentsReader = new ArgumentsReader(initializers);
     }
 
     @Test
     void readArgumentsWithAllArgs() {
         // given
-        AppArguments expectedAppArguments = new AppArguments(
-                SortType.NAME,
-                OrderType.ASC,
-                new StatisticsConfig(
-                        true,
-                        OutputType.FILE,
-                        "output/tmp/outputfile.txt"));
+        AppArguments expectedAppArguments =
+                new AppArguments(
+                        SortType.NAME,
+                        OrderType.ASC,
+                        new StatisticsConfig(true, OutputType.FILE, "output/tmp/outputfile.txt"));
         String[] args = {
-                "--stat",
-                "--sort=name",
-                "--order=asc",
-                "--output=file",
-                "--path=output/tmp/outputfile.txt"
+            "--stat",
+            "--sort=name",
+            "--order=asc",
+            "--output=file",
+            "--path=output/tmp/outputfile.txt"
         };
 
         // when
@@ -75,12 +73,11 @@ public class ArgumentsReaderTest {
     @Test
     void readArgumentsWithoutSomeArgs() {
         // given
-        AppArguments expectedAppArguments = new AppArguments(SortType.SALARY, OrderType.DESC,
-                new StatisticsConfig(true, null, null));
+        AppArguments expectedAppArguments =
+                new AppArguments(
+                        SortType.SALARY, OrderType.DESC, new StatisticsConfig(true, null, null));
         String[] args = {
-                "--stat",
-                "--sort=salary",
-                "--order=desc",
+            "--stat", "--sort=salary", "--order=desc",
         };
 
         // when

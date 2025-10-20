@@ -1,13 +1,12 @@
 package ru.korona.task.service.reader;
 
+import static ru.korona.task.service.reader.ArgumentKey.SORT_ARGUMENT_PREFIX;
+import static ru.korona.task.service.reader.ArgumentKey.SORT_ARGUMENT_SHORT_PREFIX;
+
+import java.util.List;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.objectparameters.SortType;
-
-import java.util.List;
-
-import static ru.korona.task.service.reader.ArgumentKey.SORT_ARGUMENT_PREFIX;
-import static ru.korona.task.service.reader.ArgumentKey.SORT_ARGUMENT_SHORT_PREFIX;
 
 @Component
 public class SortArgumentInitializer implements ArgumentsInitializer {
