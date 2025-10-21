@@ -1,4 +1,4 @@
-package ru.korona.task.service.reader;
+package ru.korona.task.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

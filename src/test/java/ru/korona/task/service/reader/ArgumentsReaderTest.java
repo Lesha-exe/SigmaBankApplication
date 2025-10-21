@@ -3,6 +3,7 @@ package ru.korona.task.service.reader;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,36 +15,15 @@ import ru.korona.task.objectparameters.SortType;
 
 public class ArgumentsReaderTest {
     private ArgumentsReader argumentsReader;
-    private ArgumentsInitializer sortInitializer;
-    private ArgumentsInitializer orderInitializer;
-    private ArgumentsInitializer pathInitializer;
-    private ArgumentsInitializer statisticsPresentInitializer;
-    private ArgumentsInitializer statisticsOutputInitializer;
 
     @BeforeEach
     void setUp() {
-        orderInitializer = mock(ArgumentsInitializer.class);
-        when(orderInitializer.argumentKeys()).thenReturn(List.of("--order"));
-
-        pathInitializer = mock(ArgumentsInitializer.class);
-        when(pathInitializer.argumentKeys()).thenReturn(List.of("--path"));
-
-        sortInitializer = mock(ArgumentsInitializer.class);
-        when(sortInitializer.argumentKeys()).thenReturn(List.of("--sort"));
-
-        statisticsPresentInitializer = mock(ArgumentsInitializer.class);
-        when(statisticsPresentInitializer.argumentKeys()).thenReturn(List.of("--stat"));
-
-        statisticsOutputInitializer = mock(ArgumentsInitializer.class);
-        when(statisticsOutputInitializer.argumentKeys()).thenReturn(List.of("--output"));
-
         List<ArgumentsInitializer> initializers =
-                List.of(
-                        orderInitializer,
-                        pathInitializer,
-                        sortInitializer,
-                        statisticsPresentInitializer,
-                        statisticsOutputInitializer);
+                List.of(new SortArgumentInitializer(),
+                        new OrderArgumentInitializer(),
+                        new PathArgumentInitializer(),
+                        new StatisticsIsPresentInitializer(),
+                        new StatisticsOutputTypeInitializer());
         argumentsReader = new ArgumentsReader(initializers);
     }
 

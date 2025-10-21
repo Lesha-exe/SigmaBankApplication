@@ -15,13 +15,7 @@ public class FileService {
     public void storeData(List<String> data, String outputDirectory, String fileName) {
         createDirectoryIfNotExist(outputDirectory);
         Path path = Path.of(outputDirectory, fileName);
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (String dataLine : data) {
-                writeDataToFile(dataLine, writer);
-            }
-        } catch (Exception exception) {
-            log.error("Error while saving data to directory: " + path + "Exception: " + exception);
-        }
+        storeData(data, path);
     }
 
     public void storeData(List<String> data, Path filePath) {
