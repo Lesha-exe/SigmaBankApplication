@@ -5,13 +5,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.korona.task.exceptions.AppArgumentsException;
 import ru.korona.task.models.AppArguments;
-import ru.korona.task.objectparameters.OrderType;
-import ru.korona.task.objectparameters.OutputType;
-import ru.korona.task.objectparameters.SortType;
 
 @Component
 public class ArgumentsReader {

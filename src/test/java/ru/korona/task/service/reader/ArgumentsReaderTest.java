@@ -3,7 +3,6 @@ package ru.korona.task.service.reader;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,8 @@ public class ArgumentsReaderTest {
     @BeforeEach
     void setUp() {
         List<ArgumentsInitializer> initializers =
-                List.of(new SortArgumentInitializer(),
+                List.of(
+                        new SortArgumentInitializer(),
                         new OrderArgumentInitializer(),
                         new PathArgumentInitializer(),
                         new StatisticsIsPresentInitializer(),
