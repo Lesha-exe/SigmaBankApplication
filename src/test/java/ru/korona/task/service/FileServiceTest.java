@@ -1,21 +1,24 @@
 package ru.korona.task.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class FileServiceTest {
     private FileService fileService;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         fileService = new FileService();
     }
 
@@ -27,7 +30,7 @@ public class FileServiceTest {
                         "Manager, 1, Jane Smith, 5000,00",
                         "Employee, 101, John Doe, 3000,00, 1",
                         "Employee, 105, Claire Green, 2900,75, 1");
-        Path outputTestPath = Path.of("testOutputDirectory");
+        Path outputTestPath = Path.of("output", "test");
         String fileName = "HR";
 
         // when
@@ -36,8 +39,19 @@ public class FileServiceTest {
         // then
         Path expectedFile = Path.of(outputTestPath.toString(), fileName);
         assertThat(Files.exists(expectedFile)).isTrue();
-        List<String> lines = Files.readAllLines(expectedFile);
-        assertThat(lines).isEqualTo(data);
-        Files.deleteIfExists(expectedFile);
+        assertThat(Files.readAllLines(expectedFile)).isEqualTo(data);
+        deleteTestFiles(outputTestPath);
+    }
+
+    void deleteTestFiles(Path outputTestPath) throws Exception {
+        Files.walk(outputTestPath)
+                .sorted(Comparator.reverseOrder())
+                .forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
     }
 }
