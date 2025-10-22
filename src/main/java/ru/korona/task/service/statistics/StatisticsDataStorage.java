@@ -43,8 +43,10 @@ public class StatisticsDataStorage {
     private void storeStatisticsToFile(
             List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
         Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
+        Path outputDirectory = path.getParent();
+        Path fileName = path.getFileName();
         List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
-        fileService.storeData(statisticsData, path);
+        fileService.storeData(statisticsData, outputDirectory.toString(), fileName.toString());
     }
 
     private List<String> convertToStatisticsLine(
