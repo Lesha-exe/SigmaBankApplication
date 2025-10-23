@@ -2,5 +2,8 @@ dataReader:
   inputDir: input
 departments:
   outputDir: output
+  outputFileExtensions: .sb
 statistics:
   header: department, min, max, mid
+invalidData:
+  outputFileName: error.log

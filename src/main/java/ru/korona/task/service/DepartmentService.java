@@ -1,13 +1,10 @@
 package ru.korona.task.service;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,11 +22,17 @@ public class DepartmentService {
     private static final Comparator<Employee> NAME_COMPARATOR_ASC =
             Comparator.comparing(Employee::getName);
     private static final Comparator<Employee> NAME_COMPARATOR_DESC = NAME_COMPARATOR_ASC.reversed();
+    private final FileService fileService;
+    private final String outputDirectory;
+    private final String outputFileExtensions;
 
-    private String outputDirectory;
-
-    public DepartmentService(@Value("${departments.outputDir}") String outputDirectory) {
+    public DepartmentService(
+            @Value("${departments.outputDir}") String outputDirectory,
+            @Value("${departments.outputFileExtensions}") String outputFileExtensions,
+            FileService fileService) {
+        this.fileService = fileService;
         this.outputDirectory = outputDirectory;
+        this.outputFileExtensions = outputFileExtensions;
     }
 
     public List<Department> createDepartments(List<Worker> workers, AppArguments appArguments) {
@@ -58,7 +61,7 @@ public class DepartmentService {
 
     private void sortEmployees(
             List<Employee> departmentEmployees, SortType sortType, OrderType orderType) {
-        if (sortType == null) {
+        if (sortType == null || departmentEmployees == null) {
             return;
         }
         departmentEmployees.sort(getEmployeesComparator(sortType, orderType));
@@ -73,55 +76,31 @@ public class DepartmentService {
     }
 
     public void storeDepartments(List<Department> departments) {
-        try {
-            Files.createDirectories(Path.of(outputDirectory));
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
         departments.forEach(
                 department -> {
-                    String departmentName = department.getManager().getDepartment();
-                    Path path = Path.of(outputDirectory, departmentName + ".sb");
-                    try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-                        writeManagerToFile(department.getManager(), writer);
-                        for (Employee employee : department.getEmployeeList()) {
-                            writeEmployeeToFile(employee, writer);
-                        }
-                    } catch (Exception exception) {
-                        log.info(
-                                "Error while saving department "
-                                        + departmentName
-                                        + "Exception: "
-                                        + exception);
-                    }
+                    String departmentName =
+                            department.getManager().getDepartment() + outputFileExtensions;
+                    List<String> workerData =
+                            Stream.concat(
+                                            Stream.of(createManagerLine(department.getManager())),
+                                            department.getEmployeeList().stream()
+                                                    .map(DepartmentService::createEmployeeLine))
+                                    .toList();
+                    fileService.storeData(workerData, outputDirectory, departmentName);
                 });
     }
 
-    private static void writeManagerToFile(Manager manager, BufferedWriter writer) {
-        writeWorkerToFile(
-                String.format(
-                        "Manager, %d, %s, %.2f",
-                        manager.getId(), manager.getName(), manager.getSalary()),
-                writer);
+    private static String createManagerLine(Manager manager) {
+        return String.format(
+                "Manager, %d, %s, %.2f", manager.getId(), manager.getName(), manager.getSalary());
     }
 
-    private static void writeEmployeeToFile(Employee employee, BufferedWriter writer) {
-        writeWorkerToFile(
-                String.format(
-                        "Employee, %d, %s, %.2f, %d",
-                        employee.getId(),
-                        employee.getName(),
-                        employee.getSalary(),
-                        employee.getManagerId()),
-                writer);
-    }
-
-    private static void writeWorkerToFile(String workerData, BufferedWriter writer) {
-        try {
-            writer.write(workerData);
-            writer.newLine();
-        } catch (Exception exception) {
-            log.info("Error while writing file: " + exception.getMessage());
-        }
+    private static String createEmployeeLine(Employee employee) {
+        return String.format(
+                "Employee, %d, %s, %.2f, %d",
+                employee.getId(),
+                employee.getName(),
+                employee.getSalary(),
+                employee.getManagerId());
     }
 }

@@ -1,8 +1,5 @@
 package ru.korona.task.service;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -13,26 +10,21 @@ import ru.korona.task.models.Worker;
 @Component
 @Slf4j
 public class InvalidDataService {
+    private final FileService fileService;
     private final String outputDirectory;
+    private final String outputFileName;
 
-    public InvalidDataService(@Value("${departments.outputDir}") String outputDirectory) {
+    public InvalidDataService(
+            @Value("${invalidData.outputFileName}") String outputFileName,
+            @Value("${departments.outputDir}") String outputDirectory,
+            FileService fileService) {
+        this.fileService = fileService;
+        this.outputFileName = outputFileName;
         this.outputDirectory = outputDirectory;
     }
 
     public void storeInvalidData(List<Worker> workersWithIncorrectData) {
-        Path path = Path.of(outputDirectory, "error.log");
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
-            for (Worker worker : workersWithIncorrectData) {
-                Files.createDirectories(path.getParent());
-                bufferedWriter.write(String.valueOf(worker));
-                bufferedWriter.newLine();
-            }
-        } catch (IOException exception) {
-            log.info(
-                    "Cannot write invalid workers data to file: "
-                            + path.getFileName()
-                            + "Exception: "
-                            + exception.getMessage());
-        }
+        List<String> invalidData = workersWithIncorrectData.stream().map(String::valueOf).toList();
+        fileService.storeData(invalidData, outputDirectory, outputFileName);
     }
 }
