@@ -8,8 +8,8 @@ import ru.korona.task.repository.StatisticsRepository;
 import java.util.List;
 
 @Component
-@Profile("file")
-public class StatisticsFileStorage implements StatisticsRepository {
+@Profile("database")
+public class StatisticsDataBaseRepositoryImpl implements StatisticsRepository {
     @Override
     public void storeStatistics(List<DepartmentStatistics> departmentStatisticsList) {
     }

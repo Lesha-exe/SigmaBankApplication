@@ -8,8 +8,8 @@ import ru.korona.task.repository.InvalidDataRepository;
 import java.util.List;
 
 @Component
-@Profile("file")
-public class InvalidDataFileStorage implements InvalidDataRepository {
+@Profile("database")
+public class InvalidDataDataBaseRepositoryImpl implements InvalidDataRepository {
     @Override
     public void storeData(List<Worker> workersWithIncorrectData) {
     }

@@ -7,3 +7,9 @@ statistics:
   header: department, min, max, mid
 invalidData:
   outputFileName: error.log
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/SigmaBankDb?sslmode=disable
+    username: Alexey
+    password: password
+    driver-class-name: org.postgresql.Driver

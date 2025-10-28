@@ -16,6 +16,7 @@ import ru.korona.task.models.Manager;
 import ru.korona.task.models.Worker;
 import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.SortType;
+import ru.korona.task.repository.depertmentstorage.DepartmentFileRepositoryImpl;
 
 public class DepartmentServiceTest {
     private DepartmentService departmentService;
@@ -24,7 +25,8 @@ public class DepartmentServiceTest {
     @BeforeEach
     void setUp() {
         fileService = Mockito.mock(FileService.class);
-        departmentService = new DepartmentService("output/", ".txt", fileService);
+        departmentService = new DepartmentService(
+                new DepartmentFileRepositoryImpl("output/", ".txt", fileService));
     }
 
     @Test

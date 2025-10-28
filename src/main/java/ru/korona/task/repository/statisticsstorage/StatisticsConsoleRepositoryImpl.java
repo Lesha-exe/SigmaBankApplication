@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @Profile("console")
-public class StatisticsConsoleStorage implements StatisticsRepository {
+public class StatisticsConsoleRepositoryImpl implements StatisticsRepository {
     @Override
     public void storeStatistics(List<DepartmentStatistics> departmentStatisticsList) {
     }

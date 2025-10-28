@@ -12,4 +12,6 @@ public final class ArgumentKey {
     public static final String OUTPUT_ARGUMENT_PREFIX = "--output";
     public static final String OUTPUT_ARGUMENT_SHORT_PREFIX = "-o";
     public static final String PATH_ARGUMENT_PREFIX = "--path";
+
+    public static final String SPRING_PROFILE_PREFIX = "--spring.profiles.active";
 }
