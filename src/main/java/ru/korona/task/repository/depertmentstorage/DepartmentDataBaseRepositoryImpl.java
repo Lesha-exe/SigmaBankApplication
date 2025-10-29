@@ -31,34 +31,27 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
 
     @Override
     public void storeData(List<Department> departmentsList) {
-        try (Connection connection = DriverManager.getConnection(url, username, password)){
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             createTablesIfNotExist(connection);
-            for(Department department : departmentsList){
+            for (Department department : departmentsList) {
                 storeManger(department.getManager(), connection);
                 storeEmployees(department.getEmployeeList(), connection);
             }
-        } catch (SQLException exception){
-            log.error("Cannot connect to data base! Exception: " + exception.getMessage());
+        } catch (SQLException exception) {
+            log.error("Cannot connect to data base! Exception: "
+                    + exception.getMessage());
         }
     }
 
-    private void storeManger(Manager manager, Connection connection){
-        String sql = """
-                INSERT INTO managers (id, name, salary, department)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT (id) DO UPDATE
-                    SET name = EXCLUDED.name,
-                        salary = EXCLUDED.salary,
-                        department = EXCLUDED.department
-                """;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+    private void storeManger(Manager manager, Connection connection) {
+        try (PreparedStatement stmt = connection
+                .prepareStatement(insertManagersDataRequest())) {
             stmt.setLong(1, manager.getId());
             stmt.setString(2, manager.getName());
             stmt.setDouble(3, manager.getSalary());
             stmt.setString(4, manager.getDepartment());
             stmt.executeUpdate();
-        } catch (SQLException exception){
+        } catch (SQLException exception) {
             log.error("Cannot save manager: id("
                     + manager.getId()
                     + "), name("
@@ -68,17 +61,9 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
         }
     }
 
-    private void storeEmployees(List<Employee> employees, Connection conn) {
-        String sql = """
-                INSERT INTO employees (id, name, salary, manager_id)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT (id) DO UPDATE
-                    SET name = EXCLUDED.name,
-                        salary = EXCLUDED.salary,
-                        manager_id = EXCLUDED.manager_id
-                """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    private void storeEmployees(List<Employee> employees, Connection connection) {
+        try (PreparedStatement stmt = connection
+                .prepareStatement(insertEmployeesDataRequest())) {
             for (Employee e : employees) {
                 stmt.setLong(1, e.getId());
                 stmt.setString(2, e.getName());
@@ -95,28 +80,57 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
         }
     }
 
-    private void createTablesIfNotExist(Connection connection) throws SQLException {
-        String createManagersTable = """
-        CREATE TABLE IF NOT EXISTS managers (
-            id BIGINT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            salary DOUBLE PRECISION,
-            department VARCHAR(255)
-        );
-    """;
-
-        String createEmployeesTable = """
-        CREATE TABLE IF NOT EXISTS employees (
-            id BIGINT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            salary DOUBLE PRECISION,
-            manager_id BIGINT REFERENCES managers(id)
-        );
-    """;
-
+    private void createTablesIfNotExist(Connection connection) {
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(createManagersTable);
-            stmt.execute(createEmployeesTable);
+            stmt.execute(createManagersTableRequest());
+            stmt.execute(createEmployeesTableRequest());
+        } catch (SQLException exception) {
+            log.error("Cannot send table creation request! Exception: "
+                    + exception.getMessage());
         }
+    }
+
+    private String createManagersTableRequest() {
+        return """
+                    CREATE TABLE IF NOT EXISTS managers (
+                        id BIGINT PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        salary DOUBLE PRECISION,
+                        department VARCHAR(255)
+                    );
+                """;
+    }
+
+    private String createEmployeesTableRequest() {
+        return """
+                    CREATE TABLE IF NOT EXISTS employees (
+                        id BIGINT PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        salary DOUBLE PRECISION,
+                        manager_id BIGINT REFERENCES managers(id)
+                    );
+                """;
+    }
+
+    private String insertManagersDataRequest() {
+        return """
+                INSERT INTO managers (id, name, salary, department)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT (id) DO UPDATE
+                    SET name = EXCLUDED.name,
+                        salary = EXCLUDED.salary,
+                        department = EXCLUDED.department
+                """;
+    }
+
+    private String insertEmployeesDataRequest() {
+        return """
+                INSERT INTO employees (id, name, salary, manager_id)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT (id) DO UPDATE
+                    SET name = EXCLUDED.name,
+                        salary = EXCLUDED.salary,
+                        manager_id = EXCLUDED.manager_id
+                """;
     }
 }
