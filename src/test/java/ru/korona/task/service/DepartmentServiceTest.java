@@ -25,8 +25,9 @@ public class DepartmentServiceTest {
     @BeforeEach
     void setUp() {
         fileService = Mockito.mock(FileService.class);
-        departmentService = new DepartmentService(
-                new DepartmentFileRepositoryImpl("output/", ".txt", fileService));
+        departmentService =
+                new DepartmentService(
+                        new DepartmentFileRepositoryImpl("output/", ".txt", fileService));
     }
 
     @Test

@@ -1,5 +1,7 @@
 package ru.korona.task.repository.depertmentstorage;
 
+import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -8,9 +10,6 @@ import ru.korona.task.models.Employee;
 import ru.korona.task.models.Manager;
 import ru.korona.task.repository.DepartmentRepository;
 import ru.korona.task.service.FileService;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 @Component
 @Profile("file")
@@ -38,7 +37,9 @@ public class DepartmentFileRepositoryImpl implements DepartmentRepository {
                             Stream.concat(
                                             Stream.of(createManagerLine(department.getManager())),
                                             department.getEmployeeList().stream()
-                                                    .map(DepartmentFileRepositoryImpl::createEmployeeLine))
+                                                    .map(
+                                                            DepartmentFileRepositoryImpl
+                                                                    ::createEmployeeLine))
                                     .toList();
                     fileService.storeData(workerData, outputDirectory, departmentName);
                 });

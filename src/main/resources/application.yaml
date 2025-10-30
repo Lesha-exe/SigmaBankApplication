@@ -5,6 +5,7 @@ departments:
   outputFileExtensions: .sb
 statistics:
   header: department, min, max, mid
+  outputFileName: statistics.sb
 invalidData:
   outputFileName: error.log
 spring:

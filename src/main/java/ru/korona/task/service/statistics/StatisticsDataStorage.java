@@ -1,6 +1,5 @@
 package ru.korona.task.service.statistics;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.objectparameters.StatisticsType;
+import ru.korona.task.repository.statisticsstorage.StatisticsFileRepositoryImpl;
 import ru.korona.task.service.FileService;
 
 @Component
@@ -17,36 +17,40 @@ import ru.korona.task.service.FileService;
 public class StatisticsDataStorage {
     private static final String DEPARTMENT_HEADER_KEY = "department";
     private static List<String> statisticsHeaders;
+    private final StatisticsFileRepositoryImpl statisticsFileRepository;
     private final FileService fileService;
 
     public StatisticsDataStorage(
             @Value("${statistics.header}") List<String> statisticsHeaders,
+            StatisticsFileRepositoryImpl statisticsFileRepository,
             FileService fileService) {
         this.statisticsHeaders = statisticsHeaders;
+        this.statisticsFileRepository = statisticsFileRepository;
         this.fileService = fileService;
     }
 
-    public void storeStatistics(
-            List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
-        if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
-            storeStatisticsToFile(departmentStatisticsList, appArguments);
-        } else {
-            storeStatisticsToConsole(departmentStatisticsList);
-        }
-    }
+//    public void storeStatistics(
+//            List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
+//        if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
+//            storeStatisticsToFile(departmentStatisticsList, appArguments);
+//        } else {
+//            storeStatisticsToConsole(departmentStatisticsList);
+//        }
+//    }
+//
+//    private void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList) {
+//        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
+//        statisticsData.forEach(System.out::println);
+//    }
 
-    private void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList) {
-        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
-        statisticsData.forEach(System.out::println);
-    }
-
-    private void storeStatisticsToFile(
+    public void storeStatisticsToFile(
             List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
-        Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
-        Path outputDirectory = path.getParent();
-        Path fileName = path.getFileName();
-        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
-        fileService.storeData(statisticsData, outputDirectory.toString(), fileName.toString());
+        statisticsFileRepository.storeStatistics(departmentStatisticsList);
+//        Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
+//        Path outputDirectory = path.getParent();
+//        Path fileName = path.getFileName();
+//        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
+//        fileService.storeData(statisticsData, outputDirectory.toString(), fileName.toString());
     }
 
     private List<String> convertToStatisticsLine(

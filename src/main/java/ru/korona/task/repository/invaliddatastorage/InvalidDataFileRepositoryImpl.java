@@ -1,13 +1,12 @@
 package ru.korona.task.repository.invaliddatastorage;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.korona.task.models.Worker;
 import ru.korona.task.repository.InvalidDataRepository;
 import ru.korona.task.service.FileService;
-
-import java.util.List;
 
 @Component
 @Profile("file")

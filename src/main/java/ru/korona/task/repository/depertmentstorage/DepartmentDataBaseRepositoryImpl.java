@@ -1,5 +1,7 @@
 package ru.korona.task.repository.depertmentstorage;
 
+import java.sql.*;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -8,9 +10,6 @@ import ru.korona.task.models.Department;
 import ru.korona.task.models.Employee;
 import ru.korona.task.models.Manager;
 import ru.korona.task.repository.DepartmentRepository;
-
-import java.sql.*;
-import java.util.List;
 
 @Component
 @Profile("database")
@@ -38,32 +37,30 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
                 storeEmployees(department.getEmployeeList(), connection);
             }
         } catch (SQLException exception) {
-            log.error("Cannot connect to data base! Exception: "
-                    + exception.getMessage());
+            log.error("Cannot connect to data base! Exception: " + exception.getMessage());
         }
     }
 
     private void storeManger(Manager manager, Connection connection) {
-        try (PreparedStatement stmt = connection
-                .prepareStatement(insertManagersDataRequest())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertManagersDataRequest())) {
             stmt.setLong(1, manager.getId());
             stmt.setString(2, manager.getName());
             stmt.setDouble(3, manager.getSalary());
             stmt.setString(4, manager.getDepartment());
             stmt.executeUpdate();
         } catch (SQLException exception) {
-            log.error("Cannot save manager: id("
-                    + manager.getId()
-                    + "), name("
-                    + manager.getName()
-                    + "). Exception: "
-                    + exception.getMessage());
+            log.error(
+                    "Cannot save manager: id("
+                            + manager.getId()
+                            + "), name("
+                            + manager.getName()
+                            + "). Exception: "
+                            + exception.getMessage());
         }
     }
 
     private void storeEmployees(List<Employee> employees, Connection connection) {
-        try (PreparedStatement stmt = connection
-                .prepareStatement(insertEmployeesDataRequest())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertEmployeesDataRequest())) {
             for (Employee e : employees) {
                 stmt.setLong(1, e.getId());
                 stmt.setString(2, e.getName());
@@ -73,10 +70,11 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
             }
             stmt.executeBatch();
         } catch (SQLException exception) {
-            log.error("Cannot save employee list: "
-                    + employees.toString()
-                    + ". Exception: "
-                    + exception.getMessage());
+            log.error(
+                    "Cannot save employee list: "
+                            + employees.toString()
+                            + ". Exception: "
+                            + exception.getMessage());
         }
     }
 
@@ -85,8 +83,11 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
             stmt.execute(createManagersTableRequest());
             stmt.execute(createEmployeesTableRequest());
         } catch (SQLException exception) {
-            log.error("Cannot send table creation request! Exception: "
-                    + exception.getMessage());
+            log.error(
+                    "Cannot send table creation request! "
+                            + "Table name(s): managers/employees. "
+                            + "Exception: "
+                            + exception.getMessage());
         }
     }
 

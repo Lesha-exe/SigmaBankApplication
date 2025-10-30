@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -28,9 +27,11 @@ public class ArgumentsReader {
         AppArguments appArguments = new AppArguments();
         for (String arg : args) {
             Argument argument = parseArgument(arg);
-            Optional.of(argumentInitializerMap.get(argument.getKey()))
-                    .ifPresent(argumentsInitializer -> argumentsInitializer
-                            .initialize(argument.getValue(), appArguments));
+            Optional.ofNullable(argumentInitializerMap.get(argument.getKey()))
+                    .ifPresent(
+                            argumentsInitializer ->
+                                    argumentsInitializer.initialize(
+                                            argument.getValue(), appArguments));
         }
         ArgumentsValidator.validateArguments(appArguments);
         return appArguments;

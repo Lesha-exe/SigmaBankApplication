@@ -1,9 +1,7 @@
 package ru.korona.task.repository;
 
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import ru.korona.task.models.Department;
-
 import java.util.List;
+import ru.korona.task.models.Department;
 
 public interface DepartmentRepository {
     void storeData(List<Department> departmentsList);

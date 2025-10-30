@@ -7,6 +7,7 @@ import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.OutputType;
 import ru.korona.task.objectparameters.SortType;
 
+@Component
 public class ArgumentsValidator {
     public static void validateArguments(AppArguments appArguments) {
         SortType sortType = appArguments.getSortType();
