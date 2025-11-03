@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.objectparameters.StatisticsType;
-import ru.korona.task.repository.statisticsstorage.StatisticsFileRepositoryImpl;
+import ru.korona.task.repository.StatisticsRepository;
 import ru.korona.task.service.FileService;
 
 @Component
@@ -17,15 +17,15 @@ import ru.korona.task.service.FileService;
 public class StatisticsDataStorage {
     private static final String DEPARTMENT_HEADER_KEY = "department";
     private static List<String> statisticsHeaders;
-    private final StatisticsFileRepositoryImpl statisticsFileRepository;
+    private final StatisticsRepository statisticsRepository;
     private final FileService fileService;
 
     public StatisticsDataStorage(
             @Value("${statistics.header}") List<String> statisticsHeaders,
-            StatisticsFileRepositoryImpl statisticsFileRepository,
+            StatisticsRepository statisticsRepository,
             FileService fileService) {
         this.statisticsHeaders = statisticsHeaders;
-        this.statisticsFileRepository = statisticsFileRepository;
+        this.statisticsRepository = statisticsRepository;
         this.fileService = fileService;
     }
 
@@ -45,7 +45,7 @@ public class StatisticsDataStorage {
 
     public void storeStatisticsToFile(
             List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
-        statisticsFileRepository.storeStatistics(departmentStatisticsList);
+        statisticsRepository.storeStatistics(departmentStatisticsList);
 //        Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
 //        Path outputDirectory = path.getParent();
 //        Path fileName = path.getFileName();

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.DepartmentStatistics;
+import ru.korona.task.models.Worker;
 import ru.korona.task.service.*;
 import ru.korona.task.service.reader.ArgumentsReader;
 import ru.korona.task.service.reader.WorkerData;
@@ -30,6 +31,7 @@ public class WorkerDataApplication {
             List<Department> departments =
                     departmentServices.createDepartments(
                             workerData.getWorkersWithCorrectData(), appArguments);
+//            List<Worker> workersWithIncorrectData = workerData.getWorkersWithIncorrectData();
             departmentServices.storeDepartments(departments);
             invalidDataService.storeInvalidData(workerData.getWorkersWithIncorrectData());
             if (!appArguments.getStatisticsConfig().isStatisticsPresent()) {
