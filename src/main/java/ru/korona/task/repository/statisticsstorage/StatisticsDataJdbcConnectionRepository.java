@@ -11,14 +11,14 @@ import ru.korona.task.objectparameters.StatisticsType;
 import ru.korona.task.repository.StatisticsRepository;
 
 @Component
-@Profile("database")
+@Profile("JdbcConnection")
 @Slf4j
-public class StatisticsDataBaseRepositoryImpl implements StatisticsRepository {
+public class StatisticsDataJdbcConnectionRepository implements StatisticsRepository {
     private String url;
     private String username;
     private String password;
 
-    public StatisticsDataBaseRepositoryImpl(
+    public StatisticsDataJdbcConnectionRepository(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
             @Value("${spring.datasource.password}") String password) {
@@ -30,12 +30,11 @@ public class StatisticsDataBaseRepositoryImpl implements StatisticsRepository {
     @Override
     public void storeStatistics(List<DepartmentStatistics> departmentStatisticsList) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            createTableIfNotExists(connection);
             for (DepartmentStatistics departmentStatistics : departmentStatisticsList) {
                 storeStatisticsData(departmentStatistics, connection);
             }
         } catch (SQLException exception) {
-            log.error("Cannot connect to data base! Exception: " + exception.getMessage());
+            log.error("Failed to store statistics data", exception);
         }
     }
 
@@ -53,35 +52,10 @@ public class StatisticsDataBaseRepositoryImpl implements StatisticsRepository {
             preparedStatement.executeUpdate();
         } catch (SQLException exception) {
             log.error(
-                    "Cannot save statistics data for department: "
-                            + departmentStatistics.getDepartmentName()
-                            + " to data base!"
-                            + " Exception: "
-                            + exception.getMessage());
+                    "Cannot save statistics data for department: department name=[{}] to database",
+                    departmentStatistics.getDepartmentName(),
+                    exception);
         }
-    }
-
-    private void createTableIfNotExists(Connection connection) {
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(createTableRequest());
-        } catch (SQLException exception) {
-            log.error(
-                    "Cannot send table creation request!"
-                            + "Table name: statistics_data. "
-                            + "Exception: "
-                            + exception.getMessage());
-        }
-    }
-
-    private String createTableRequest() {
-        return """
-                    CREATE TABLE IF NOT EXISTS statistics_data (
-                        department_name VARCHAR(255) PRIMARY KEY,
-                        min DOUBLE PRECISION,
-                        max DOUBLE PRECISION,
-                        mid DOUBLE PRECISION
-                );
-                """;
     }
 
     private String insertStatisticsDataRequest() {

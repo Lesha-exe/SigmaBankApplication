@@ -12,14 +12,14 @@ import ru.korona.task.models.Manager;
 import ru.korona.task.repository.DepartmentRepository;
 
 @Component
-@Profile("database")
+@Profile("JdbcConnection")
 @Slf4j
-public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
+public class DepartmentJdbcConnectionRepository implements DepartmentRepository {
     private final String url;
     private final String username;
     private final String password;
 
-    public DepartmentDataBaseRepositoryImpl(
+    public DepartmentJdbcConnectionRepository(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
             @Value("${spring.datasource.password}") String password) {
@@ -31,13 +31,12 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
     @Override
     public void storeData(List<Department> departmentsList) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            createTablesIfNotExist(connection);
             for (Department department : departmentsList) {
                 storeManger(department.getManager(), connection);
                 storeEmployees(department.getEmployeeList(), connection);
             }
         } catch (SQLException exception) {
-            log.error("Cannot connect to data base! Exception: " + exception.getMessage());
+            log.error("Failed to store department data", exception);
         }
     }
 
@@ -50,12 +49,10 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
             stmt.executeUpdate();
         } catch (SQLException exception) {
             log.error(
-                    "Cannot save manager: id("
-                            + manager.getId()
-                            + "), name("
-                            + manager.getName()
-                            + "). Exception: "
-                            + exception.getMessage());
+                    "Cannot save manager: id=[{}], name=[{}]",
+                    manager.getId(),
+                    manager.getName(),
+                    exception);
         }
     }
 
@@ -70,47 +67,8 @@ public class DepartmentDataBaseRepositoryImpl implements DepartmentRepository {
             }
             stmt.executeBatch();
         } catch (SQLException exception) {
-            log.error(
-                    "Cannot save employee list: "
-                            + employees.toString()
-                            + ". Exception: "
-                            + exception.getMessage());
+            log.error("Cannot save employee list: employee=[{}]", employees.toString(), exception);
         }
-    }
-
-    private void createTablesIfNotExist(Connection connection) {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(createManagersTableRequest());
-            stmt.execute(createEmployeesTableRequest());
-        } catch (SQLException exception) {
-            log.error(
-                    "Cannot send table creation request! "
-                            + "Table name(s): managers/employees. "
-                            + "Exception: "
-                            + exception.getMessage());
-        }
-    }
-
-    private String createManagersTableRequest() {
-        return """
-                    CREATE TABLE IF NOT EXISTS managers (
-                        id BIGINT PRIMARY KEY,
-                        name VARCHAR(255) NOT NULL,
-                        salary DOUBLE PRECISION,
-                        department VARCHAR(255)
-                    );
-                """;
-    }
-
-    private String createEmployeesTableRequest() {
-        return """
-                    CREATE TABLE IF NOT EXISTS employees (
-                        id BIGINT PRIMARY KEY,
-                        name VARCHAR(255) NOT NULL,
-                        salary DOUBLE PRECISION,
-                        manager_id BIGINT REFERENCES managers(id)
-                    );
-                """;
     }
 
     private String insertManagersDataRequest() {

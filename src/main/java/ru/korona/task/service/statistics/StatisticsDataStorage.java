@@ -29,28 +29,30 @@ public class StatisticsDataStorage {
         this.fileService = fileService;
     }
 
-//    public void storeStatistics(
-//            List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
-//        if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
-//            storeStatisticsToFile(departmentStatisticsList, appArguments);
-//        } else {
-//            storeStatisticsToConsole(departmentStatisticsList);
-//        }
-//    }
-//
-//    private void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList) {
-//        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
-//        statisticsData.forEach(System.out::println);
-//    }
+    //    public void storeStatistics(
+    //            List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
+    //        if (appArguments.getStatisticsConfig().getOutputFilePath() != null) {
+    //            storeStatisticsToFile(departmentStatisticsList, appArguments);
+    //        } else {
+    //            storeStatisticsToConsole(departmentStatisticsList);
+    //        }
+    //    }
+    //
+    //    private void storeStatisticsToConsole(List<DepartmentStatistics> departmentStatisticsList)
+    // {
+    //        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
+    //        statisticsData.forEach(System.out::println);
+    //    }
 
-    public void storeStatisticsToFile(
+    public void storeStatistics(
             List<DepartmentStatistics> departmentStatisticsList, AppArguments appArguments) {
         statisticsRepository.storeStatistics(departmentStatisticsList);
-//        Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
-//        Path outputDirectory = path.getParent();
-//        Path fileName = path.getFileName();
-//        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
-//        fileService.storeData(statisticsData, outputDirectory.toString(), fileName.toString());
+        //        Path path = Path.of(appArguments.getStatisticsConfig().getOutputFilePath());
+        //        Path outputDirectory = path.getParent();
+        //        Path fileName = path.getFileName();
+        //        List<String> statisticsData = convertToStatisticsLine(departmentStatisticsList);
+        //        fileService.storeData(statisticsData, outputDirectory.toString(),
+        // fileName.toString());
     }
 
     private List<String> convertToStatisticsLine(

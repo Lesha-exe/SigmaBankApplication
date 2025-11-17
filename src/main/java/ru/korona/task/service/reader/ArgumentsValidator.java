@@ -1,13 +1,11 @@
 package ru.korona.task.service.reader;
 
-import org.springframework.stereotype.Component;
 import ru.korona.task.exceptions.AppArgumentsException;
 import ru.korona.task.models.AppArguments;
 import ru.korona.task.objectparameters.OrderType;
 import ru.korona.task.objectparameters.OutputType;
 import ru.korona.task.objectparameters.SortType;
 
-@Component
 public class ArgumentsValidator {
     public static void validateArguments(AppArguments appArguments) {
         SortType sortType = appArguments.getSortType();

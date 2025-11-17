@@ -10,14 +10,14 @@ import ru.korona.task.models.Worker;
 import ru.korona.task.repository.InvalidDataRepository;
 
 @Component
-@Profile("database")
+@Profile("JdbcConnection")
 @Slf4j
-public class InvalidDataDataBaseRepositoryImpl implements InvalidDataRepository {
+public class InvalidDataJdbcConnectionRepository implements InvalidDataRepository {
     private final String url;
     private final String username;
     private final String password;
 
-    public InvalidDataDataBaseRepositoryImpl(
+    public InvalidDataJdbcConnectionRepository(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
             @Value("${spring.datasource.password}") String password) {
@@ -30,12 +30,11 @@ public class InvalidDataDataBaseRepositoryImpl implements InvalidDataRepository 
     public void storeData(List<Worker> workersWithIncorrectData) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             List<String> invalidData = invalidDataToString(workersWithIncorrectData);
-            createTableIfNotExists(connection);
             for (String invalidDataLine : invalidData) {
                 storeInvalidData(invalidDataLine, connection);
             }
         } catch (SQLException exception) {
-            log.error("Cannot connect to data base! Exception: " + exception.getMessage());
+            log.error("Failed to store invalid data", exception);
         }
     }
 
@@ -44,36 +43,12 @@ public class InvalidDataDataBaseRepositoryImpl implements InvalidDataRepository 
             stmt.setString(1, invalidDataLine);
             stmt.executeUpdate();
         } catch (SQLException exception) {
-            log.error(
-                    "Cannot save invalid data to data base!"
-                            + " Exception: "
-                            + exception.getMessage());
-        }
-    }
-
-    private void createTableIfNotExists(Connection connection) {
-        try (Statement statement = connection.createStatement(); ) {
-            statement.execute(createTableRequest());
-        } catch (SQLException exception) {
-            log.error(
-                    "Cannot send table creation request! "
-                            + "Table name: invalid_data. "
-                            + "Exception: "
-                            + exception.getMessage());
+            log.error("Cannot save invalid data to database", exception);
         }
     }
 
     private List<String> invalidDataToString(List<Worker> workersWithIncorrectData) {
         return workersWithIncorrectData.stream().map(String::valueOf).toList();
-    }
-
-    private String createTableRequest() {
-        return """
-                    CREATE TABLE IF NOT EXISTS invalid_data (
-                        id SERIAL PRIMARY KEY,
-                        data TEXT NOT NULL
-                );
-                """;
     }
 
     private String insertInvalidDataRequest() {
