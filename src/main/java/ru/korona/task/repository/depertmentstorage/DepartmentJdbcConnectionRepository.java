@@ -32,8 +32,28 @@ public class DepartmentJdbcConnectionRepository implements DepartmentRepository 
     public void storeData(List<Department> departmentsList) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             for (Department department : departmentsList) {
-                storeManger(department.getManager(), connection);
-                storeEmployees(department.getEmployeeList(), connection);
+                try {
+                    connection.setAutoCommit(false);
+                    storeManger(department.getManager(), connection);
+                    storeEmployees(department.getEmployeeList(), connection);
+                    connection.commit();
+                } catch (SQLException exception) {
+                    log.error(
+                            "Error while saving department: {}",
+                            department.getManager().getDepartment(),
+                            exception);
+                    try {
+                        connection.rollback();
+                        log.warn(
+                                "Transaction for department {} rolled back",
+                                department.getManager().getDepartment(),
+                                exception);
+                    } catch (SQLException rollbackException) {
+                        log.error("Rollback failure", rollbackException);
+                    }
+                } finally {
+                    connection.setAutoCommit(true);
+                }
             }
         } catch (SQLException exception) {
             log.error("Failed to store department data", exception);
