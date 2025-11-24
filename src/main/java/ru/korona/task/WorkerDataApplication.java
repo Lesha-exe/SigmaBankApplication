@@ -30,8 +30,6 @@ public class WorkerDataApplication {
             List<Department> departments =
                     departmentServices.createDepartments(
                             workerData.getWorkersWithCorrectData(), appArguments);
-            //            List<Worker> workersWithIncorrectData =
-            // workerData.getWorkersWithIncorrectData();
             departmentServices.storeDepartments(departments);
             invalidDataService.storeInvalidData(workerData.getWorkersWithIncorrectData());
             if (!appArguments.getStatisticsConfig().isStatisticsPresent()) {
@@ -39,7 +37,7 @@ public class WorkerDataApplication {
             }
             List<DepartmentStatistics> departmentStatistics =
                     departmentStatisticsService.calculateStatistics(departments);
-            statisticsDataStorage.storeStatistics(departmentStatistics, appArguments);
+            statisticsDataStorage.storeStatistics(departmentStatistics);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }

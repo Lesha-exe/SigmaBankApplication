@@ -14,12 +14,12 @@ import ru.korona.task.repository.DepartmentRepository;
 @Component
 @Profile("JdbcConnection")
 @Slf4j
-public class DepartmentJdbcConnectionRepository implements DepartmentRepository {
+public class DepartmentJdbcConnectionRepositoryImpl implements DepartmentRepository {
     private final String url;
     private final String username;
     private final String password;
 
-    public DepartmentJdbcConnectionRepository(
+    public DepartmentJdbcConnectionRepositoryImpl(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
             @Value("${spring.datasource.password}") String password) {
@@ -61,7 +61,7 @@ public class DepartmentJdbcConnectionRepository implements DepartmentRepository 
     }
 
     private void storeManger(Manager manager, Connection connection) {
-        try (PreparedStatement stmt = connection.prepareStatement(insertManagersDataRequest())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertManagersData())) {
             stmt.setLong(1, manager.getId());
             stmt.setString(2, manager.getName());
             stmt.setDouble(3, manager.getSalary());
@@ -77,7 +77,7 @@ public class DepartmentJdbcConnectionRepository implements DepartmentRepository 
     }
 
     private void storeEmployees(List<Employee> employees, Connection connection) {
-        try (PreparedStatement stmt = connection.prepareStatement(insertEmployeesDataRequest())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertEmployeesData())) {
             for (Employee e : employees) {
                 stmt.setLong(1, e.getId());
                 stmt.setString(2, e.getName());
@@ -91,10 +91,10 @@ public class DepartmentJdbcConnectionRepository implements DepartmentRepository 
         }
     }
 
-    private String insertManagersDataRequest() {
+    private String insertManagersData() {
         return """
-                INSERT INTO managers (id, name, salary, department)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO managers (id, name, salary, department, creation_timestamp)
+                VALUES (?, ?, ?, ?, NOW())
                 ON CONFLICT (id) DO UPDATE
                     SET name = EXCLUDED.name,
                         salary = EXCLUDED.salary,
@@ -102,10 +102,10 @@ public class DepartmentJdbcConnectionRepository implements DepartmentRepository 
                 """;
     }
 
-    private String insertEmployeesDataRequest() {
+    private String insertEmployeesData() {
         return """
-                INSERT INTO employees (id, name, salary, manager_id)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO employees (id, name, salary, manager_id, creation_timestamp)
+                VALUES (?, ?, ?, ?, NOW())
                 ON CONFLICT (id) DO UPDATE
                     SET name = EXCLUDED.name,
                         salary = EXCLUDED.salary,

@@ -31,7 +31,7 @@ public class DepartmentFileRepositoryImpl implements DepartmentRepository {
     public void storeData(List<Department> departments) {
         departments.forEach(
                 department -> {
-                    String departmentName =
+                    String fileName =
                             department.getManager().getDepartment() + outputFileExtensions;
                     List<String> workerData =
                             Stream.concat(
@@ -41,7 +41,7 @@ public class DepartmentFileRepositoryImpl implements DepartmentRepository {
                                                             DepartmentFileRepositoryImpl
                                                                     ::createEmployeeLine))
                                     .toList();
-                    fileService.storeData(workerData, outputDirectory, departmentName);
+                    fileService.storeData(workerData, outputDirectory, fileName);
                 });
     }
 

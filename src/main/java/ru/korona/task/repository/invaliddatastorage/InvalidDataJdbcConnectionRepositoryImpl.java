@@ -12,12 +12,12 @@ import ru.korona.task.repository.InvalidDataRepository;
 @Component
 @Profile("JdbcConnection")
 @Slf4j
-public class InvalidDataJdbcConnectionRepository implements InvalidDataRepository {
+public class InvalidDataJdbcConnectionRepositoryImpl implements InvalidDataRepository {
     private final String url;
     private final String username;
     private final String password;
 
-    public InvalidDataJdbcConnectionRepository(
+    public InvalidDataJdbcConnectionRepositoryImpl(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
             @Value("${spring.datasource.password}") String password) {
@@ -39,7 +39,7 @@ public class InvalidDataJdbcConnectionRepository implements InvalidDataRepositor
     }
 
     private void storeInvalidData(String invalidDataLine, Connection connection) {
-        try (PreparedStatement stmt = connection.prepareStatement(insertInvalidDataRequest())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertInvalidData())) {
             stmt.setString(1, invalidDataLine);
             stmt.executeUpdate();
         } catch (SQLException exception) {
@@ -51,10 +51,10 @@ public class InvalidDataJdbcConnectionRepository implements InvalidDataRepositor
         return workersWithIncorrectData.stream().map(String::valueOf).toList();
     }
 
-    private String insertInvalidDataRequest() {
+    private String insertInvalidData() {
         return """
-                INSERT INTO invalid_data (data)
-                VALUES (?)
+                INSERT INTO invalid_data (data, creation_timestamp)
+                VALUES (?, NOW())
                 """;
     }
 }

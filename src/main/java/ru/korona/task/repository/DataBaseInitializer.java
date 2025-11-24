@@ -31,61 +31,58 @@ public class DataBaseInitializer implements ApplicationListener<ContextRefreshed
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            try (Statement stmt = connection.createStatement()) {
-                stmt.execute(createManagersTableRequest());
-                stmt.execute(createEmployeesTableRequest());
-                stmt.execute(createInvalidDataTableRequest());
-                stmt.execute(createStatisticsDataTableRequest());
-            } catch (SQLException exception) {
-                log.error(
-                        "Cannot send table creation request! "
-                                + "Table name(s): managers/employees. "
-                                + "Exception: "
-                                + exception.getMessage());
-            }
+            Statement stmt = connection.createStatement();
+            stmt.execute(createManagersTable());
+            stmt.execute(createEmployeesTable());
+            stmt.execute(createInvalidDataTable());
+            stmt.execute(createStatisticsDataTable());
         } catch (SQLException exception) {
-            log.error("Failed to store department data", exception);
+            log.error("Failed to create tables. ", exception);
         }
     }
 
-    private String createManagersTableRequest() {
+    private static String createManagersTable() {
         return """
                     CREATE TABLE IF NOT EXISTS managers (
                         id BIGINT PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         salary DOUBLE PRECISION,
-                        department VARCHAR(255)
+                        department VARCHAR(255),
+                        creation_timestamp TIMESTAMPTZ DEFAULT NOW()
                     );
                 """;
     }
 
-    private String createEmployeesTableRequest() {
+    private static String createEmployeesTable() {
         return """
                     CREATE TABLE IF NOT EXISTS employees (
                         id BIGINT PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         salary DOUBLE PRECISION,
-                        manager_id BIGINT REFERENCES managers(id)
+                        manager_id BIGINT REFERENCES managers(id),
+                        creation_timestamp TIMESTAMPTZ DEFAULT NOW()
                     );
                 """;
     }
 
-    private String createInvalidDataTableRequest() {
+    private static String createInvalidDataTable() {
         return """
                     CREATE TABLE IF NOT EXISTS invalid_data (
                         id SERIAL PRIMARY KEY,
-                        data TEXT NOT NULL
+                        data TEXT NOT NULL,
+                        creation_timestamp TIMESTAMPTZ DEFAULT NOW()
                 );
                 """;
     }
 
-    private String createStatisticsDataTableRequest() {
+    private static String createStatisticsDataTable() {
         return """
                     CREATE TABLE IF NOT EXISTS statistics_data (
                         department_name VARCHAR(255) PRIMARY KEY,
                         min DOUBLE PRECISION,
                         max DOUBLE PRECISION,
-                        mid DOUBLE PRECISION
+                        mid DOUBLE PRECISION,
+                        creation_timestamp TIMESTAMPTZ DEFAULT NOW()
                 );
                 """;
     }

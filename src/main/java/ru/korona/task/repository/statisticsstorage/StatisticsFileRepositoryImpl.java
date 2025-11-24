@@ -15,7 +15,7 @@ import ru.korona.task.service.FileService;
 @Profile("file")
 public class StatisticsFileRepositoryImpl implements StatisticsRepository {
     private static final String DEPARTMENT_HEADER_KEY = "department";
-    private static List<String> statisticsHeaders;
+    private final List<String> statisticsHeaders;
     private final String outputFileName;
     private final String outputDirectory;
     private final FileService fileService;
@@ -43,12 +43,14 @@ public class StatisticsFileRepositoryImpl implements StatisticsRepository {
         return Stream.concat(
                         Stream.of(headerToString()),
                         departmentStatisticsList.stream()
-                                .map(StatisticsFileRepositoryImpl::createDepartmentStatisticsLine))
+                                .map(
+                                        departmentStatistics ->
+                                                createDepartmentStatisticsLine(
+                                                        departmentStatistics)))
                 .toList();
     }
 
-    private static String createDepartmentStatisticsLine(
-            DepartmentStatistics departmentStatistics) {
+    private String createDepartmentStatisticsLine(DepartmentStatistics departmentStatistics) {
         return statisticsHeaders.stream()
                 .map(header -> getStatisticsColumnValue(departmentStatistics, header))
                 .collect(Collectors.joining(", "));

@@ -13,12 +13,12 @@ import ru.korona.task.repository.StatisticsRepository;
 @Component
 @Profile("JdbcConnection")
 @Slf4j
-public class StatisticsDataJdbcConnectionRepository implements StatisticsRepository {
+public class StatisticsDataJdbcConnectionRepositoryImpl implements StatisticsRepository {
     private String url;
     private String username;
     private String password;
 
-    public StatisticsDataJdbcConnectionRepository(
+    public StatisticsDataJdbcConnectionRepositoryImpl(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
             @Value("${spring.datasource.password}") String password) {
@@ -41,7 +41,7 @@ public class StatisticsDataJdbcConnectionRepository implements StatisticsReposit
     private void storeStatisticsData(
             DepartmentStatistics departmentStatistics, Connection connection) {
         try (PreparedStatement preparedStatement =
-                connection.prepareStatement(insertStatisticsDataRequest())) {
+                connection.prepareStatement(insertStatisticsData())) {
             preparedStatement.setString(1, departmentStatistics.getDepartmentName());
             preparedStatement.setDouble(
                     2, departmentStatistics.getStatisticsData().get(StatisticsType.MIN_SALARY));
@@ -50,6 +50,7 @@ public class StatisticsDataJdbcConnectionRepository implements StatisticsReposit
             preparedStatement.setDouble(
                     4, departmentStatistics.getStatisticsData().get(StatisticsType.MID_SALARY));
             preparedStatement.executeUpdate();
+            preparedStatement.addBatch();
         } catch (SQLException exception) {
             log.error(
                     "Cannot save statistics data for department: department name=[{}] to database",
@@ -58,14 +59,14 @@ public class StatisticsDataJdbcConnectionRepository implements StatisticsReposit
         }
     }
 
-    private String insertStatisticsDataRequest() {
+    private String insertStatisticsData() {
         return """
-                INSERT INTO statistics_data (department_name, min, max, mid)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO statistics_data (department_name, min, max, mid, creation_timestamp)
+                VALUES (?, ?, ?, ?, NOW())
                     ON CONFLICT (department_name) DO UPDATE
                         SET min = EXCLUDED.min,
                         max = EXCLUDED.max,
-                        mid = EXCLUDED.mid;
+                        mid = EXCLUDED.mid
                 """;
     }
 }

@@ -23,6 +23,7 @@ public class DepartmentService {
     private static final Comparator<Employee> NAME_COMPARATOR_ASC =
             Comparator.comparing(Employee::getName);
     private static final Comparator<Employee> NAME_COMPARATOR_DESC = NAME_COMPARATOR_ASC.reversed();
+
     private final DepartmentRepository departmentRepository;
 
     public List<Department> createDepartments(List<Worker> workers, AppArguments appArguments) {
