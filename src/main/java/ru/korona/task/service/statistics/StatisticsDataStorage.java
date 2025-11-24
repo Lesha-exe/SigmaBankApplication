@@ -11,7 +11,6 @@ import ru.korona.task.service.FileService;
 @Component
 @Slf4j
 public class StatisticsDataStorage {
-    private static final String DEPARTMENT_HEADER_KEY = "department";
     private final List<String> statisticsHeaders;
     private final StatisticsRepository statisticsRepository;
 

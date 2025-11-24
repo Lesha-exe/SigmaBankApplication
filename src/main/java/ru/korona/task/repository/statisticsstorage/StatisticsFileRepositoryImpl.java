@@ -15,6 +15,7 @@ import ru.korona.task.service.FileService;
 @Profile("file")
 public class StatisticsFileRepositoryImpl implements StatisticsRepository {
     private static final String DEPARTMENT_HEADER_KEY = "department";
+
     private final List<String> statisticsHeaders;
     private final String outputFileName;
     private final String outputDirectory;
