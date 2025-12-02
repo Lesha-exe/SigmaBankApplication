@@ -31,7 +31,27 @@ public class StatisticsDataJdbcConnectionRepositoryImpl implements StatisticsRep
     public void storeStatistics(List<DepartmentStatistics> departmentStatisticsList) {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             for (DepartmentStatistics departmentStatistics : departmentStatisticsList) {
-                storeStatisticsData(departmentStatistics, connection);
+                try {
+                    connection.setAutoCommit(false);
+                    storeStatisticsData(departmentStatistics, connection);
+                    connection.commit();
+                } catch (SQLException exception) {
+                    log.error(
+                            "Error while saving statistics data: {}",
+                            departmentStatistics,
+                            exception);
+                    try {
+                        connection.rollback();
+                        log.warn(
+                                "Transaction for statistics data: {} rolled back",
+                                departmentStatistics,
+                                exception);
+                    } catch (SQLException rollbackException) {
+                        log.error("Rollback failure", rollbackException);
+                    }
+                } finally {
+                    connection.setAutoCommit(true);
+                }
             }
         } catch (SQLException exception) {
             log.error("Failed to store statistics data", exception);
@@ -50,7 +70,6 @@ public class StatisticsDataJdbcConnectionRepositoryImpl implements StatisticsRep
             preparedStatement.setDouble(
                     4, departmentStatistics.getStatisticsData().get(StatisticsType.MID_SALARY));
             preparedStatement.executeUpdate();
-            preparedStatement.addBatch();
         } catch (SQLException exception) {
             log.error(
                     "Cannot save statistics data for department: department name=[{}] to database",

@@ -31,7 +31,24 @@ public class InvalidDataJdbcConnectionRepositoryImpl implements InvalidDataRepos
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             List<String> invalidData = invalidDataToString(workersWithIncorrectData);
             for (String invalidDataLine : invalidData) {
-                storeInvalidData(invalidDataLine, connection);
+                try {
+                    connection.setAutoCommit(false);
+                    storeInvalidData(invalidDataLine, connection);
+                    connection.commit();
+                } catch (SQLException exception) {
+                    log.error("Error while saving invalid data: {}", invalidDataLine, exception);
+                    try {
+                        connection.rollback();
+                        log.warn(
+                                "Transaction for invalid data: {} rolled back",
+                                invalidDataLine,
+                                exception);
+                    } catch (SQLException rollbackException) {
+                        log.error("Rollback failure", rollbackException);
+                    }
+                } finally {
+                    connection.setAutoCommit(true);
+                }
             }
         } catch (SQLException exception) {
             log.error("Failed to store invalid data", exception);
