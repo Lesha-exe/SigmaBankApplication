@@ -7,7 +7,6 @@ import ru.korona.task.models.AppArguments;
 import ru.korona.task.models.Department;
 import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.service.*;
-// import ru.korona.task.service.reader.ArgumentsReader;
 import ru.korona.task.service.reader.ArgumentsReader;
 import ru.korona.task.service.reader.WorkerData;
 import ru.korona.task.service.reader.WorkerDataReader;
@@ -38,7 +37,7 @@ public class WorkerDataApplication {
             }
             List<DepartmentStatistics> departmentStatistics =
                     departmentStatisticsService.calculateStatistics(departments);
-            statisticsDataStorage.storeStatistics(departmentStatistics, appArguments);
+            statisticsDataStorage.storeStatistics(departmentStatistics);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }

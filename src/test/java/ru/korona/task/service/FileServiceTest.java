@@ -1,9 +1,6 @@
 package ru.korona.task.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -11,8 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @Slf4j
 public class FileServiceTest {
@@ -30,16 +29,15 @@ public class FileServiceTest {
         if (Files.exists(output)) {
             Files.walk(output)
                     .sorted(Comparator.reverseOrder())
-                    .forEach(path -> {
-                        try {
-                            Files.deleteIfExists(path);
-                        } catch (IOException e) {
-                            throw new UncheckedIOException(
-                                    "Error while deleting: "
-                                            + path
-                                            + ". Exception: ", e);
-                        }
-                    });
+                    .forEach(
+                            path -> {
+                                try {
+                                    Files.deleteIfExists(path);
+                                } catch (IOException e) {
+                                    throw new UncheckedIOException(
+                                            "Error while deleting: " + path + ". Exception: ", e);
+                                }
+                            });
         }
     }
 

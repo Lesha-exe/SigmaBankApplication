@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SigmaBankApp implements CommandLineRunner {
     private static final Logger LOG = LoggerFactory.getLogger(SigmaBankApp.class);
+
     @Autowired private WorkerDataApplication workerDataApplication;
 
     public static void main(String[] args) {

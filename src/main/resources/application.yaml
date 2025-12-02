@@ -5,5 +5,12 @@ departments:
   outputFileExtensions: .sb
 statistics:
   header: department, min, max, mid
+  outputFileName: statistics.sb
 invalidData:
   outputFileName: error.log
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/SigmaBankDb?sslmode=disable
+    username: Alexey
+    password: password
+    driver-class-name: org.postgresql.Driver
