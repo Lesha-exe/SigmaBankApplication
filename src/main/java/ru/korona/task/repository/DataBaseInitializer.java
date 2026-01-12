@@ -12,7 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("JdbcConnection")
+@Profile("JdbcTemplate")
 @Slf4j
 public class DataBaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
     private final String url;
