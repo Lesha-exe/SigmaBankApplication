@@ -56,7 +56,7 @@ public class InvalidDataJdbcConnectionRepositoryImpl implements InvalidDataRepos
     }
 
     private void storeInvalidData(String invalidDataLine, Connection connection) {
-        try (PreparedStatement stmt = connection.prepareStatement(insertInvalidData())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertInvalidDataQuery())) {
             stmt.setString(1, invalidDataLine);
             stmt.executeUpdate();
         } catch (SQLException exception) {
@@ -68,7 +68,7 @@ public class InvalidDataJdbcConnectionRepositoryImpl implements InvalidDataRepos
         return workersWithIncorrectData.stream().map(String::valueOf).toList();
     }
 
-    private String insertInvalidData() {
+    private String insertInvalidDataQuery() {
         return """
                 INSERT INTO invalid_data (data, creation_timestamp)
                 VALUES (?, NOW())

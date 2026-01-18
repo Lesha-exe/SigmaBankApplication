@@ -1,5 +1,6 @@
 package ru.korona.task.repository.statisticsstorage;
 
+import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -8,10 +9,8 @@ import ru.korona.task.models.DepartmentStatistics;
 import ru.korona.task.objectparameters.StatisticsType;
 import ru.korona.task.repository.StatisticsRepository;
 
-import java.util.List;
-
 @Component
-@Profile("JdbcTemplate")
+@Profile({"JdbcTemplate"})
 public class StatisticsDataJdbcTemplateRepositoryImpl implements StatisticsRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -28,15 +27,15 @@ public class StatisticsDataJdbcTemplateRepositoryImpl implements StatisticsRepos
     }
 
     private void storeStatisticsData(DepartmentStatistics departmentStatistics) {
-        jdbcTemplate.update(insertStatisticsData(),
+        jdbcTemplate.update(
+                insertStatisticsDataQuery(),
                 departmentStatistics.getDepartmentName(),
                 departmentStatistics.getStatisticsData().get(StatisticsType.MIN_SALARY),
                 departmentStatistics.getStatisticsData().get(StatisticsType.MAX_SALARY),
-                departmentStatistics.getStatisticsData().get(StatisticsType.MID_SALARY)
-        );
+                departmentStatistics.getStatisticsData().get(StatisticsType.MID_SALARY));
     }
 
-    private String insertStatisticsData() {
+    private String insertStatisticsDataQuery() {
         return """
                 INSERT INTO statistics_data (department_name, min, max, mid, creation_timestamp)
                 VALUES (?, ?, ?, ?, NOW())

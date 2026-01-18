@@ -1,5 +1,6 @@
 package ru.korona.task.repository.depertmentstorage;
 
+import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,6 @@ import ru.korona.task.models.Employee;
 import ru.korona.task.models.Manager;
 import ru.korona.task.repository.DepartmentRepository;
 
-import java.util.List;
-
 @Component
 @Profile("JdbcTemplate")
 public class DepartmentJdbcTemplateRepositoryImpl implements DepartmentRepository {
@@ -19,6 +18,7 @@ public class DepartmentJdbcTemplateRepositoryImpl implements DepartmentRepositor
     public DepartmentJdbcTemplateRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     @Transactional
     public void storeData(List<Department> departmentsList) {
@@ -30,17 +30,16 @@ public class DepartmentJdbcTemplateRepositoryImpl implements DepartmentRepositor
 
     private void storeManager(Manager manager) {
         jdbcTemplate.update(
-                insertManagersData(),
+                insertManagersDataQuery(),
                 manager.getId(),
                 manager.getName(),
                 manager.getSalary(),
-                manager.getDepartment()
-        );
+                manager.getDepartment());
     }
 
     private void storeEmployees(List<Employee> employees) {
         jdbcTemplate.batchUpdate(
-                insertEmployeesData(),
+                insertEmployeesDataQuery(),
                 employees,
                 employees.size(),
                 (ps, employee) -> {
@@ -48,11 +47,10 @@ public class DepartmentJdbcTemplateRepositoryImpl implements DepartmentRepositor
                     ps.setString(2, employee.getName());
                     ps.setDouble(3, employee.getSalary());
                     ps.setLong(4, employee.getManagerId());
-                }
-        );
+                });
     }
 
-    private String insertManagersData() {
+    private String insertManagersDataQuery() {
         return """
                 INSERT INTO managers (id, name, salary, department, creation_timestamp)
                 VALUES (?, ?, ?, ?, NOW())
@@ -63,7 +61,7 @@ public class DepartmentJdbcTemplateRepositoryImpl implements DepartmentRepositor
                 """;
     }
 
-    private String insertEmployeesData() {
+    private String insertEmployeesDataQuery() {
         return """
                 INSERT INTO employees (id, name, salary, manager_id, creation_timestamp)
                 VALUES (?, ?, ?, ?, NOW())

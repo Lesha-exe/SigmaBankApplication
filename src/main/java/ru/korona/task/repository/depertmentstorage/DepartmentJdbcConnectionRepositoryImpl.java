@@ -61,7 +61,7 @@ public class DepartmentJdbcConnectionRepositoryImpl implements DepartmentReposit
     }
 
     private void storeManger(Manager manager, Connection connection) {
-        try (PreparedStatement stmt = connection.prepareStatement(insertManagersData())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertManagersDataQuery())) {
             stmt.setLong(1, manager.getId());
             stmt.setString(2, manager.getName());
             stmt.setDouble(3, manager.getSalary());
@@ -77,7 +77,7 @@ public class DepartmentJdbcConnectionRepositoryImpl implements DepartmentReposit
     }
 
     private void storeEmployees(List<Employee> employees, Connection connection) {
-        try (PreparedStatement stmt = connection.prepareStatement(insertEmployeesData())) {
+        try (PreparedStatement stmt = connection.prepareStatement(insertEmployeesDataQuery())) {
             for (Employee e : employees) {
                 stmt.setLong(1, e.getId());
                 stmt.setString(2, e.getName());
@@ -91,7 +91,7 @@ public class DepartmentJdbcConnectionRepositoryImpl implements DepartmentReposit
         }
     }
 
-    private String insertManagersData() {
+    private String insertManagersDataQuery() {
         return """
                 INSERT INTO managers (id, name, salary, department, creation_timestamp)
                 VALUES (?, ?, ?, ?, NOW())
@@ -102,7 +102,7 @@ public class DepartmentJdbcConnectionRepositoryImpl implements DepartmentReposit
                 """;
     }
 
-    private String insertEmployeesData() {
+    private String insertEmployeesDataQuery() {
         return """
                 INSERT INTO employees (id, name, salary, manager_id, creation_timestamp)
                 VALUES (?, ?, ?, ?, NOW())
