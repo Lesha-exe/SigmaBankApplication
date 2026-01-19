@@ -61,7 +61,7 @@ public class StatisticsDataJdbcConnectionRepositoryImpl implements StatisticsRep
     private void storeStatisticsData(
             DepartmentStatistics departmentStatistics, Connection connection) {
         try (PreparedStatement preparedStatement =
-                connection.prepareStatement(insertStatisticsData())) {
+                connection.prepareStatement(insertStatisticsDataQuery())) {
             preparedStatement.setString(1, departmentStatistics.getDepartmentName());
             preparedStatement.setDouble(
                     2, departmentStatistics.getStatisticsData().get(StatisticsType.MIN_SALARY));
@@ -78,7 +78,7 @@ public class StatisticsDataJdbcConnectionRepositoryImpl implements StatisticsRep
         }
     }
 
-    private String insertStatisticsData() {
+    private String insertStatisticsDataQuery() {
         return """
                 INSERT INTO statistics_data (department_name, min, max, mid, creation_timestamp)
                 VALUES (?, ?, ?, ?, NOW())

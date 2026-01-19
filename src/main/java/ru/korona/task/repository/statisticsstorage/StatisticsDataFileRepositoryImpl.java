@@ -13,7 +13,7 @@ import ru.korona.task.service.FileService;
 
 @Component
 @Profile("file")
-public class StatisticsFileRepositoryImpl implements StatisticsRepository {
+public class StatisticsDataFileRepositoryImpl implements StatisticsRepository {
     private static final String DEPARTMENT_HEADER_KEY = "department";
 
     private final List<String> statisticsHeaders;
@@ -21,7 +21,7 @@ public class StatisticsFileRepositoryImpl implements StatisticsRepository {
     private final String outputDirectory;
     private final FileService fileService;
 
-    public StatisticsFileRepositoryImpl(
+    public StatisticsDataFileRepositoryImpl(
             @Value("${statistics.header}") List<String> statisticsHeaders,
             @Value("${statistics.outputFileName}") String outputFileName,
             @Value("${departments.outputDir}") String outputDirectory,
